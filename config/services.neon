@@ -1,6 +1,8 @@
 services:
 	- App\Core\RouterFactory::createRouter
 
+includes:
+	- doctrine.neon
 
 search:
 	-	in: %appDir%

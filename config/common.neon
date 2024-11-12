@@ -1,3 +1,6 @@
+includes:
+	- database_connection.neon
+
 parameters:
 
 
@@ -9,10 +12,9 @@ application:
 
 
 database:
-	dsn: 'sqlite::memory:'
-	user:
-	password:
-
+	dsn: 'mysql:host=%database_connection.host%;dbname=%database_connection.dbname%'
+	user: %database_connection.user%
+	password: %database_connection.password%
 
 latte:
 	strictTypes: yes

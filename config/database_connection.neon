@@ -1,0 +1,6 @@
+parameters:
+	database_connection:
+		host: localhost
+		user: root
+		password: mysql
+		dbname: sysel
