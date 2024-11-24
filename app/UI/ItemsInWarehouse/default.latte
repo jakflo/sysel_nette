@@ -1,0 +1,115 @@
+{block content}
+
+{var $available_only_text = $mode == 'available-only' ? ' (pouze volné položky)' : ''}
+<h1>Položky ve skladě{$available_only_text}</h1>
+
+<a n:href="ItemsInWarehouseFull:default"><button type="button">Detailně</button></a>
+
+{if ($mode == 'all')}
+    <a n:href="ItemsInWarehouse:default available-only"><button type="button">Pouze volné položky</button></a>
+{else}
+    <a n:href="ItemsInWarehouse:default"><button type="button">Zobrazit vše</button></a>
+{/if}
+
+<div id="brief_item_list">
+    {foreach $items_list as $warehouse => $items}
+        <div class="ware_list_brief">
+            <h4>{$warehouse}</h4>
+            <form n:name="addItem">
+                <table class="w3_table ware_list_brief_table">
+                    <tr>
+                        <th>Název položky</th><th>Celkový počet{$available_only_text}</th>                        
+                    </tr>
+                    {foreach $items as $item}
+                        <tr>
+                            <td>{$item['item']}</td>
+                            <td>{$item['n']}</td>
+                        </tr>
+                    {/foreach}
+                    <tr>
+                        <td>
+                            <label n:name="item_id" />
+                            <select n:name="item_id" class="add_item_select" data-id="{$item['warehouse_id']}" />
+                        </td>
+                        <td>
+                            <label n:name="amount">Množství (maximálně <span class="item_max_amount" data-id="{$item['warehouse_id']}">??</span> ks)</label>
+                            <input n:name="amount" />
+                            <input n:name="sent" />
+                            <input n:name="warehouse_id" value="{$item['warehouse_id']}" />
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    {/foreach}
+</div>
+
+{if (count($empty_warehouses) > 0)}
+    <h4>Přidat položku do prázdného skladu</h4>
+    <form n:name="addItemToEmptyWarehouse">
+        <table class="w3_table" id="add_item_to_empty_tab">
+            <tr>
+                <th>Sklad</th><th>Název položky</th><th>Množství</th>
+            </tr>
+            <td>
+                <label n:name="warehouse_id" />
+                <select n:name="warehouse_id" class="add_item_select" data-id="empty" />
+            </td>
+            <td>
+                <label n:name="item_id" />
+                <select n:name="item_id" class="add_item_select" data-id="empty" />
+            </td>
+            <td>
+                <label n:name="amount">Množství (maximálně <span class="item_max_amount" data-id="empty">??</span> ks)</label>
+                <input n:name="amount" />
+                <input n:name="sent" />
+            </td>
+        </table>
+    </form>
+{/if}
+
+<script>
+    $(function() {
+        $('.add_item_select').click(function() {
+            var select_id = $(this).attr('data-id');
+            var select_value = $(this).val();
+            
+            if (select_id === 'empty') {
+                var warehouse_id = $("select[name='warehouse_id'][data-id='empty']").val();
+                var item_id = $("select[name='item_id'][data-id='empty']").val();
+                var target_span = $("span.item_max_amount[data-id='empty']");
+            } else {
+                var warehouse_id = select_id;
+                var item_id = select_value;
+                var target_span = $("span.item_max_amount[data-id='" + select_id + "']");
+            }
+            
+            if (!warehouse_id.length || !item_id.length) {
+                $(target_span).text('??');
+            } else {
+                update_max_items(warehouse_id, item_id, target_span);
+            }
+        });
+    });
+    
+    async function update_max_items(warehouse_id, item_id, target_span) {
+        var url = new URL({link //updateMaxItems!});
+        url.searchParams.set({$control->getParameterId('warehouse_id')}, warehouse_id);
+        url.searchParams.set({$control->getParameterId('item_id')}, item_id);
+        var response_raw = await fetch(url, {
+                headers: {'X-Requested-With': 'XMLHttpRequest'}
+        });
+        var response = await response_raw.json();
+        
+        if (response.status === 'ok') {
+            var new_value = response.maxAmount;
+        } else {
+            var new_value = '??';
+        }
+        
+        $(target_span).text(new_value);
+    }
+    
+</script>
+
+{/block}

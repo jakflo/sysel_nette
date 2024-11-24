@@ -3,17 +3,21 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-
-	<title>{ifset title}{include title|stripHtml} | {/ifset}Nette Web</title>
+        <link rel="stylesheet" href="{$basePath}/css/common.css">
+        <link rel="icon" href="{$basePath}/img/sysel.ico" type="image/x-icon">
+	<title n:if="isset($title)">{$title}</title>
+        {block scripts}
+            <script src="https://unpkg.com/nette-forms@3"></script>
+            <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+            <script src="{$basePath}/js/common.js"></script>
+            {block moreScripts}{/block}
+	{/block}
 </head>
 
 <body>
 	<div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
 
 	{include content}
-
-	{block scripts}
-	<script src="https://unpkg.com/nette-forms@3"></script>
-	{/block}
+	
 </body>
 </html>

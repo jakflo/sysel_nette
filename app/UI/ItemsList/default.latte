@@ -1,0 +1,58 @@
+{block content}
+<h1>Seznam položek</h1>
+
+<table class="w3_table">
+    <tr>
+        <th>Jméno položky</th><th>Zabraná plocha (m<sup>2</sup> / ks)</th>
+        <th>Výbobce</th><th></th><th></th>
+    </tr>
+    {foreach $items_list as $item}
+        <tr>
+            <td>{$item->name}</td>
+            <td>
+                {if ($item->items_stored > 0)}
+                    {(string)$item->area|replace: '.', ','}
+                {else}
+                    <form n:name="changeArea">
+                        <input n:name="area" data-id="{$item->id}" value="{$item->area}" />
+                        <input n:name="id" value="{$item->id}" />
+                        <input n:name="old_value" data-id="{$item->id}" value="{$item->area}" />
+                        <input n:name="sent" />
+                        <button n:name="back" class="reset_item_area" data-id="{$item->id}">Zpět</button>
+                    </form>
+                {/if}
+            </td>
+            <td>
+                {$item->manufacturer} ({$item->country})
+            </td>
+            <td>
+                <div class="rename_item hidden" id="rename_div_{$item->id}">
+                        <form n:name=renameItem class="rename_item_form">
+                            <input n:name=name value="{$item->name}" />
+                            <input n:name=id value="{$item->id}" />
+                            <input n:name=sent />
+                            <button n:name=cancel class="rename_item_cancel" data-id="{$item->id}">Zrušit</button>
+                        </form>
+                    </div>
+                    <button type="button" class="rename_item_button" data-id="{$item->id}">Přejmenovat</button>
+            </td>
+            <td>
+                    {include one_button_form from '../form_helper.latte', 
+                        formName: 'deleteItem', 
+                        isDisabled: $item->items_used > 0, 
+                        itemId: $item->id, 
+                        disabledTitle: 'Nelze smazat použitou položku'
+                    }
+            </td>
+        </tr>
+    {/foreach}
+</table>
+
+<h4>Vytvořit novou položku</h4>
+{control createItem}
+
+{/block}
+
+{block moreScripts}
+    <script src="{$basePath}/js/items_list.js"></script>
+{/block}

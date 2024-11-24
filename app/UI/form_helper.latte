@@ -1,0 +1,9 @@
+{block one_button_form}
+{* predavane promenne: formName(string), isDisabled(bool), disabledTitle(string), itemId(int)=0 *}
+    <form n:name=$formName>
+        {var $disabled = $isDisabled ? 'disabled' : ''}
+        {var $title = $isDisabled ? $disabledTitle : false}
+        <input n:if="$itemId > 0" n:name=id value="{$itemId}" />
+        <input n:name=sent {$disabled} n:attr="title: $title" />
+    </form>
+{/block}

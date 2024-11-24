@@ -3,13 +3,11 @@ namespace App\UI\Entities;
 
 use \Doctrine\ORM\Mapping as ORM;
 use \Doctrine\DBAL\Types\Types;
-use \Doctrine\Common\Collections\ArrayCollection;
-use \Doctrine\Common\Collections\Collection;
-use \App\UI\Entities\WarehouseHasItem;
+use \App\UI\Entities\Manufacturer;
 
 #[ORM\Entity]
-#[ORM\Table(name: 'warehouse')]
-class Warehouse
+#[ORM\Table(name: 'item')]
+class Item
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -19,15 +17,17 @@ class Warehouse
     #[ORM\Column(type: Types::STRING)]
     protected string $name;
     
+    #[ORM\Column(type: Types::FLOAT)]
+    protected string $area;
+    
     #[ORM\Column(type: Types::INTEGER)]
-    protected int $area;
+    protected string $manufacturer_id;
     
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    protected \DateTime $created;
+    #[ORM\ManyToOne(targetEntity: Manufacturer::class)]
+    #[ORM\JoinColumn(name: 'manufacturer_id', referencedColumnName: 'id')]
+    protected Manufacturer $manufacturer;
     
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    protected \DateTime | null $last_edited;
-
+    
     public function getId(): int
     {
         return $this->id;
@@ -38,19 +38,14 @@ class Warehouse
         return $this->name;
     }
     
-    public function getArea(): int
+    public function getArea(): float
     {
         return $this->area;
     }
     
-    public function getCreated(): \DateTime
+    public function getManufacturer(): Manufacturer
     {
-        return $this->created;
-    }
-    
-    public function getLastEdited(): \DateTime|null
-    {
-        return $this->last_edited;
+        return $this->manufacturer;
     }
     
     public function setId(int $id)
@@ -65,21 +60,15 @@ class Warehouse
         return $this;
     }
     
-    public function setArea(int $area)
+    public function setArea(float $area)
     {
         $this->area = $area;
         return $this;
     }
     
-    public function setCreated(\DateTime $created)
+    public function setManufacturer(Manufacturer $manufacturer)
     {
-        $this->created = $created;
-        return $this;
-    }
-    
-    public function setLastEdited(\DateTime|null $last_edited)
-    {
-        $this->last_edited = $last_edited;
+        $this->manufacturer = $manufacturer;
         return $this;
     }
     

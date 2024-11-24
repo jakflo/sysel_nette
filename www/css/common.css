@@ -1,0 +1,87 @@
+.hidden {
+    display: none;
+}
+
+.w3_table {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+}
+.w3_table td, .w3_table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+.w3_table tr:nth-child(even){background-color: #f2f2f2;}
+.w3_table tr:hover, table.simple_borderless tr:hover {background-color: #ddd;}
+.w3_table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}
+
+table.simple_borderless {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;    
+}
+table.simple_borderless td, table.simple_borderless th {
+  padding: 8px;
+  text-align: left;
+}
+
+
+p.error, ul.error li {
+    color: red;
+    font-weight: bold;
+}
+
+p.message {
+    color: blue;
+}
+
+.grey {
+    color: grey;
+}
+
+.red {
+    color: red;
+}
+
+.green {
+    color: green;
+}
+
+div.strankovac {
+    margin: 15px 2px;
+}
+div.strankovac a, div.strankovac span {
+    padding: 5px;
+    font-size: 28px;
+}
+div.strankovac span.curr_page {
+    background-color: greenyellow;
+}
+
+button.marked {
+    background: linear-gradient(to bottom, #99ff66 0%, #009900 100%);
+}
+
+ul.bez_znacek {
+    list-style-type:none;
+    padding-left: 5px;
+}
+
+div.flash {
+    font-size: 24px;
+}
+
+div.flash.error {
+    font-weight: bold;
+    color: red;
+}
+
+div.flash.success {
+    font-weight: bold;
+    color: green;
+}
