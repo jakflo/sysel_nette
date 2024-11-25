@@ -30,6 +30,8 @@
                         <td>
                             <label n:name="item_id" />
                             <select n:name="item_id" class="add_item_select" data-id="{$item['warehouse_id']}" />
+                            <label n:name="lot_name" />
+                            <input n:name="lot_name" />
                         </td>
                         <td>
                             <label n:name="amount">Množství (maximálně <span class="item_max_amount" data-id="{$item['warehouse_id']}">??</span> ks)</label>
@@ -58,6 +60,8 @@
             <td>
                 <label n:name="item_id" />
                 <select n:name="item_id" class="add_item_select" data-id="empty" />
+                <label n:name="lot_name" />
+                <input n:name="lot_name" />
             </td>
             <td>
                 <label n:name="amount">Množství (maximálně <span class="item_max_amount" data-id="empty">??</span> ks)</label>

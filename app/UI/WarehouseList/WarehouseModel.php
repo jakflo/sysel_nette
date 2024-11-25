@@ -24,20 +24,20 @@ class WarehouseModel
     public function printList()
     {
         $warehouses = $this->dbe->query(
-                "SELECT w.*, wa.area_filled 
-                FROM warehouse w 
+                "SELECT w.*, wa.area_filled
+                FROM warehouse w
                 LEFT JOIN 
                 (
                     SELECT wi.warehouse_id, SUM(i.area) AS area_filled
                     FROM warehouse_has_item wi 
-                    JOIN item i ON wi.item_id = i.id 
-                    JOIN item_status it ON wi.status_id = it.id 
-                    WHERE it.short_name IN ('available', 'reserved') 
+                    JOIN item_with_lot il ON wi.item_with_lot_id = il.id 
+                    JOIN item i ON il.item_id = i.id 
+                    JOIN item_status it ON wi.status_id = it.id
+                    WHERE it.short_name IN ('available', 'reserved')
                     GROUP BY wi.warehouse_id
-                ) AS wa ON wa.warehouse_id = w.id 
+                ) AS wa ON wa.warehouse_id = w.id
                 ORDER BY w.id"
-        )->fetchAll();
-        
+        )->fetchAll();        
         return $warehouses;
     }
     
@@ -95,7 +95,8 @@ class WarehouseModel
                 ->createQuery("SELECT SUM(i.area) AS n 
                                 FROM App\\UI\\Entities\\WarehouseHasItem iw 
                                 JOIN iw.status s 
-                                JOIN iw.item i 
+                                JOIN iw.item_with_lot il 
+                                JOIN il.item i 
                                 WHERE s.short_name IN('available', 'reserved') 
                                     AND iw.warehouse_id = :wid")
                 ->setParameters(['wid' => $id])                

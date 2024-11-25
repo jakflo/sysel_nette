@@ -46,6 +46,7 @@ final class ItemsInWarehousePresenter extends \Nette\Application\UI\Presenter
                 ->setRequired()
                 ->addRule(Form::IsIn, 'Neplatná položka', array_keys($items_list))
                 ;
+        $form->addText('lot_name', 'Šarže')->setRequired();
         $form
                 ->addInteger('amount')
                 ->setRequired()
@@ -76,6 +77,7 @@ final class ItemsInWarehousePresenter extends \Nette\Application\UI\Presenter
                 ->setRequired()
                 ->addRule(Form::IsIn, 'Neplatná položka', array_keys($items_list))
                 ;
+        $form->addText('lot_name', 'Šarže')->setRequired();
         $form
                 ->addInteger('amount')
                 ->setRequired()

@@ -4,7 +4,7 @@ namespace App\UI\Entities;
 use \Doctrine\ORM\Mapping as ORM;
 use \Doctrine\DBAL\Types\Types;
 use \App\UI\Entities\ItemStatus;
-use \App\UI\Entities\Item;
+use \App\UI\Entities\ItemWithLot;
 use \App\UI\Entities\Warehouse;
 
 #[ORM\Entity]
@@ -20,7 +20,7 @@ class WarehouseHasItem
     protected int $warehouse_id;
     
     #[ORM\Column(type: Types::INTEGER)]
-    protected int $item_id;
+    protected int $item_with_lot_id;
     
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     protected \DateTime $added;
@@ -39,8 +39,8 @@ class WarehouseHasItem
     #[ORM\JoinColumn(name: 'status_id', referencedColumnName: 'id')]
     protected ItemStatus $status;
     
-    #[ORM\ManyToOne(targetEntity: Item::class)]
-    #[ORM\JoinColumn(name: 'item_id', referencedColumnName: 'id')]
-    protected Item $item;
+    #[ORM\ManyToOne(targetEntity: ItemWithLot::class)]
+    #[ORM\JoinColumn(name: 'item_with_lot_id', referencedColumnName: 'id')]
+    protected ItemWithLot $item_with_lot;
     
 }

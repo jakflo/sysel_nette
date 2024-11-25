@@ -4,6 +4,7 @@ namespace App\UI\ItemsList;
 use \App\UI\Entities\WarehouseHasItem;
 use \App\UI\Entities\Item;
 use \App\UI\Entities\Manufacturer;
+use \App\UI\Entities\ItemWithLot;
 use \App\UI\ItemsList\ItemIsUsedException;
 use \App\UI\Exceptions\NotFoundException;
 use \App\UI\Exceptions\UsedNameException;
@@ -27,22 +28,24 @@ class ItemsModel
     public function printList()
     {
         return $this->dbe->query(
-                "SELECT i.*, m.name AS manufacturer, a.country, iu.items_stored, iu2.items_used 
+                "SELECT i.*, m.name AS manufacturer, a.country, iu.items_stored, iu2.items_used
                 FROM item i 
                 JOIN manufacturer m ON i.manufacturer_id = m.id 
-                JOIN address a ON m.address_id = a.id 
+                JOIN address a ON m.address_id = a.id
                 LEFT JOIN (
-                    SELECT i.id, COUNT(i.id) AS items_stored 
+                    SELECT i.id, COUNT(i.id) AS items_stored
                     FROM warehouse_has_item wi 
                     JOIN item_status it ON wi.status_id = it.id 
-                    JOIN item i ON wi.item_id = i.id 
-                    WHERE it.short_name IN ('available', 'reserved') 
+                    JOIN item_with_lot il ON wi.item_with_lot_id = il.id 
+                    JOIN item i ON il.item_id = i.id
+                    WHERE it.short_name IN ('available', 'reserved')
                     GROUP BY i.id
-                ) AS iu ON iu.id = i.id 
+                ) AS iu ON iu.id = i.id
                 LEFT JOIN (
-                    SELECT i.id, COUNT(i.id) AS items_used 
+                    SELECT i.id, COUNT(i.id) AS items_used
                     FROM warehouse_has_item wi 
-                    JOIN item i ON wi.item_id = i.id 
+                    JOIN item_with_lot il ON wi.item_with_lot_id = il.id 
+                    JOIN item i ON il.item_id = i.id
                     GROUP BY i.id
                 ) AS iu2 ON iu2.id = i.id"
         )->fetchAll();
@@ -73,6 +76,12 @@ class ItemsModel
     {
         $this->checkIfItemIsUsed($item_id, false);
         $item = $this->getItem($item_id);
+        
+        $lots = $this->em->getRepository(ItemWithLot::class)->findBy(['item_id' => $item]);
+        foreach ($lots as $lot) {
+            $this->em->remove($lot);
+        }
+        
         $this->em->remove($item);
         $this->em->flush();
     }
@@ -99,7 +108,8 @@ class ItemsModel
                 "SELECT wi 
                 FROM App\\UI\\Entities\\WarehouseHasItem wi 
                 JOIN wi.status s 
-                WHERE wi.item_id = :item_id {$statuse_term}"
+                JOIN wi.item_with_lot il                 
+                WHERE il.item_id = :item_id {$statuse_term}"
         )
                 ->setParameters(['item_id' => $item_id])
                 ->setMaxResults(1)

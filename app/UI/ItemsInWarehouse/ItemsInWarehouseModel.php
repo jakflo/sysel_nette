@@ -24,14 +24,15 @@ class ItemsInWarehouseModel
     {
         $item_status_term = $available_only ? "= 'available'" : "IN ('available', 'reserved')";
         $list = $this->em->createQuery(
-                "SELECT w.id AS warehouse_id, w.name AS warehouse, it.name AS item, COUNT(wi.item_id) AS n 
+                "SELECT w.id AS warehouse_id, w.name AS warehouse, it.name AS item, COUNT(il.item_id) AS n 
                 FROM App\\UI\\Entities\\WarehouseHasItem wi 
                 JOIN wi.warehouse w 
-                JOIN wi.item it 
+                JOIN wi.item_with_lot il 
+                JOIN il.item it 
                 JOIN wi.status its 
                 WHERE its.short_name {$item_status_term} 
-                GROUP BY wi.warehouse_id, wi.item_id 
-                ORDER BY wi.warehouse_id, wi.item_id"
+                GROUP BY wi.warehouse_id, il.item_id 
+                ORDER BY wi.warehouse_id, il.item_id"
         )->getResult();
         
         return ArrayTools::groupMultiArray($list, 'warehouse');
