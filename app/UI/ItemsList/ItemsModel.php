@@ -11,18 +11,13 @@ use \App\UI\Exceptions\UsedNameException;
 
 class ItemsModel
 {
-    /**     
-     * @var \Doctrine\ORM\EntityManager
-     */
-    protected $em;
-
     public function __construct(
             protected \Nette\Database\Explorer $dbe, 
-            protected \App\UI\Model\EntityManagerFactory $db_factory, 
+            protected \Doctrine\ORM\EntityManager $em, 
             protected \App\UI\ManufacturerList\ManufacturerModelFactory $manufacturer_model_factory
     )
     {
-        $this->em = $this->db_factory->create();
+        
     }
     
     public function printList()
@@ -89,7 +84,7 @@ class ItemsModel
     public function create(string $name, float $area, int $manufacturer_id)
     {
         $this->checkIfNameIsUsed($name);
-        $manufacturer = $this->manufacturer_model_factory->create()->setEntityManager($this->em)->getManufacturer($manufacturer_id);
+        $manufacturer = $this->manufacturer_model_factory->create()->getManufacturer($manufacturer_id);
         
         $item = new Item();
         $item

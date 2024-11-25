@@ -8,17 +8,12 @@ use \App\UI\Entities\Warehouse;
 
 class WarehouseModel
 {
-    /**     
-     * @var \Doctrine\ORM\EntityManager
-     */
-    protected $em;
-
     public function __construct(
             protected \Nette\Database\Explorer $dbe, 
-            protected \App\UI\Model\EntityManagerFactory $db_factory
+            protected \Doctrine\ORM\EntityManager $em
     )
     {
-        $this->em = $this->db_factory->create();
+        
     }
     
     public function printList()

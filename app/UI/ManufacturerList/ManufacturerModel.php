@@ -1,28 +1,16 @@
 <?php
 namespace App\UI\ManufacturerList;
 
-use \Doctrine\ORM\EntityManager;
 use \App\UI\Entities\Manufacturer;
 use \App\UI\Exceptions\NotFoundException;
 
 class ManufacturerModel
 {
-    /**     
-     * @var EntityManager
-     */
-    protected $em;
-
     public function __construct(
-            protected \App\UI\Model\EntityManagerFactory $db_factory
+            protected \Doctrine\ORM\EntityManager $em
     )
     {
-        $this->em = $this->db_factory->create();
-    }
-    
-    public function setEntityManager(EntityManager $em)
-    {
-        $this->em = $em;
-        return $this;
+        
     }
     
     public function getListForSelect(): array

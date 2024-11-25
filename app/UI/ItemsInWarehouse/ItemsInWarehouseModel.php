@@ -5,19 +5,14 @@ use \App\UI\Tools\ArrayTools;
 
 class ItemsInWarehouseModel
 {
-    /**
-     * @var EntityManager
-     */
-    protected $em;
-
     public function __construct(
             protected \Nette\Database\Explorer $dbe, 
-            protected \App\UI\Model\EntityManagerFactory $db_factory, 
+            protected \Doctrine\ORM\EntityManager $em,             
             protected \App\UI\ItemsList\ItemsModelFactory $items_model_factory, 
             protected \App\UI\WarehouseList\WarehouseModelFactory $warehouse_model_factory
     )
     {
-        $this->em = $this->db_factory->create();
+    
     }
     
     public function getList(bool $available_only)
