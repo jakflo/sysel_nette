@@ -2,6 +2,9 @@
 namespace App\UI\ItemsInWarehouse;
 
 use \App\UI\Tools\ArrayTools;
+use \App\UI\ItemsInWarehouse\WarehouseCapacityExceededException;
+use \App\UI\Entities\ItemStatus;
+use \App\UI\Entities\WarehouseHasItem;
 
 class ItemsInWarehouseModel
 {
@@ -54,9 +57,40 @@ class ItemsInWarehouseModel
     public function getItemMaxAmount(int $warehouse_id, int $item_id): int
     {
         $item = $this->items_model_factory->create()->getItem($item_id);
-        $warehouse_model = $this->warehouse_model_factory->create();        
+        $warehouse_model = $this->warehouse_model_factory->create();
         $warehouse_free_space = $warehouse_model->getFreeSpace($warehouse_id);
         return floor($warehouse_free_space / $item->getArea());
+    }
+    
+    public function addItems(int $warehouse_id, int $item_id, string $lot_name, int $amount)
+    {
+        $warehouse_model = $this->warehouse_model_factory->create();
+        $warehouse = $warehouse_model->getWarehouse($warehouse_id);
+        
+        $max_amount = $this->getItemMaxAmount($warehouse_id, $item_id);
+        if ($amount > $max_amount) {
+            throw new WarehouseCapacityExceededException('tolik polozek se do skladu nevejde');
+        }
+        
+        $items_model = $this->items_model_factory->create();
+        $item_with_lot = $items_model->createItemWithLot($item_id, $lot_name);
+        $item_status = $this->em->getRepository(ItemStatus::class)->findOneBy(['short_name' => 'available']);
+        
+        $added_items = [];
+        for ($c = 1; $c <= $amount; $c++) {
+            $added_item = new WarehouseHasItem();
+            $added_item
+                    ->setWarehouse($warehouse)
+                    ->setItemWithLot($item_with_lot)
+                    ->setOrderId(null)
+                    ->setStatus($item_status)
+                    ->setAdded((new \DateTime()))
+                    ;
+            $this->em->persist($added_item);
+            $added_items[] = $added_item;
+        }
+        
+        $this->em->flush();
     }
     
 }

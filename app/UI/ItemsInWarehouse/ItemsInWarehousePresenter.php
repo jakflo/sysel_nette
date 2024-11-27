@@ -7,6 +7,8 @@ namespace App\UI\ItemsInWarehouse;
 use \App\UI\Tools\ArrayTools;
 use \Nette\Application\UI\Form;
 use \Nette\Application\AbortException;
+use \App\UI\Exceptions\NotFoundException;
+use \App\UI\ItemsInWarehouse\WarehouseCapacityExceededException;
 
 final class ItemsInWarehousePresenter extends \Nette\Application\UI\Presenter
 {
@@ -17,15 +19,12 @@ final class ItemsInWarehousePresenter extends \Nette\Application\UI\Presenter
     {
         
     }
-    
-    protected string $mode;
 
     public function renderDefault($mode)
     {
         if (!in_array($mode, ['available-only', 'all'])) {
             $this->redirect('ItemsInWarehouse:default');
         }
-        $this->mode = $mode;
         
         $model = $this->items_in_warehouse_model_factory->create();
         $model->getEmptyWarehousesListForSelect(true);
@@ -64,7 +63,7 @@ final class ItemsInWarehousePresenter extends \Nette\Application\UI\Presenter
         $items_model = $this->items_model_factory->create();
         $items_in_warehouse_model = $this->items_in_warehouse_model_factory->create();
         $items_list = ArrayTools::addPlaceholderToArrayForSelect($items_model->printSimpleList());
-        $empty_warehouses = ArrayTools::addPlaceholderToArrayForSelect($items_in_warehouse_model->getEmptyWarehousesListForSelect($this->mode == 'available-only'));
+        $empty_warehouses = ArrayTools::addPlaceholderToArrayForSelect($items_in_warehouse_model->getEmptyWarehousesListForSelect($this->getMode() == 'available-only'));
         
         $form = new Form();
         $form
@@ -115,6 +114,35 @@ final class ItemsInWarehousePresenter extends \Nette\Application\UI\Presenter
     
     public function doAddItems(Form $form, $data)
     {
+        $items_in_warehouse_model = $this->items_in_warehouse_model_factory->create();
         
+        try {
+            $items_in_warehouse_model->addItems((int)$data['warehouse_id'], (int)$data['item_id'], $data['lot_name'], (int)$data['amount']);
+            $this->flashMessage('Položky úspěšně vloženy do skladu', 'success');
+            $this->redirect('ItemsInWarehouse:default');
+        } catch (NotFoundException $e) {
+            switch ($e->getCode()) {
+                case NotFoundException::WAREHOUSE: 
+                    $this->flashMessage('Chyba! Sklad nenalezen', 'error');
+                    break;
+                case NotFoundException::ITEM:
+                    $this->flashMessage('Chyba! položka nenalezena', 'error');
+                    break;
+                default :
+                    throw $e;
+            }
+            $this->redirect('ItemsInWarehouse:default');
+        } catch (WarehouseCapacityExceededException $e) {
+            $this->flashMessage('Chyba! Tolik položek se do skladu nevejde', 'error');
+            $this->redirect('ItemsInWarehouse:default');
+        }
     }
+    
+    protected function getMode()
+    {
+        $path = $this->getHttpRequest()->getUrl()->getPath();
+        $path_params = explode('/', trim($path, '/'));
+        return isset($path_params[1]) ? $path_params[1] : 'all';
+    }
+    
 }

@@ -96,6 +96,45 @@ class ItemsModel
         $this->em->flush();
     }
     
+    public function getItemWithLot(int $item_id, string $lot): ItemWithLot
+    {
+        $this->getItem($item_id);
+        $result = $this->em->getRepository(ItemWithLot::class)->findOneBy(
+                [
+                    'item_id' => $item_id, 
+                    'lot' => $lot
+                ]
+        );
+        
+        if (!$result) {
+            throw new NotFoundException('polozka s sarzi nenalezeny', NotFoundException::ITEMWITHLOT);
+        }
+        return $result;
+    }
+    
+    public function createItemWithLot(int $item_id, string $lot): ItemWithLot
+    {
+        try {
+            $item_wWith_lot = $this->getItemWithLot($item_id, $lot);
+            return $item_wWith_lot;
+        } catch (NotFoundException $e) {
+            if ($e->getCode() != NotFoundException::ITEMWITHLOT) {
+                throw $e;
+            }
+            
+            $item = $this->getItem($item_id);
+            $item_wWith_lot = new ItemWithLot();
+            $item_wWith_lot
+                    ->setItem($item)
+                    ->setlot($lot)
+                    ;
+            
+            $this->em->persist($item_wWith_lot);
+            $this->em->flush();
+            return $item_wWith_lot;
+        }
+    }
+    
     protected function checkIfItemIsUsed(int $item_id, bool $stored_items_only)
     {
         $statuse_term = $stored_items_only ? "AND s.short_name IN ('available', 'reserved')" : '';

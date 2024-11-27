@@ -43,4 +43,103 @@ class WarehouseHasItem
     #[ORM\JoinColumn(name: 'item_with_lot_id', referencedColumnName: 'id')]
     protected ItemWithLot $item_with_lot;
     
+    public function getId(): int
+    {
+        return $this->id;
+    }
+    
+    public function getWarehouseId(): int
+    {
+        return $this->warehouse_id;
+    }
+    
+    public function getItemWithLotId(): int
+    {
+        return $this->item_with_lot_id;
+    }
+    
+    public function getAdded(): \DateTime
+    {
+        return $this->added;
+    }
+    
+    public function getOrderId(): int | null
+    {
+        return $this->order_id;
+    }
+    
+    public function getStatusId(): int
+    {
+        return $this->status_id;
+    }
+    
+    public function getWarehouse(): Warehouse
+    {
+        return $this->warehouse;
+    }
+    
+    public function getStatus(): ItemStatus
+    {
+        return $this->status;
+    }
+    
+    public function getItemWithLot(): ItemWithLot
+    {
+        return $this->item_with_lot;
+    }
+    
+    public function setId(int $id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+    
+    public function setWarehouseId(int $warehouse_id)
+    {
+        $this->warehouse_id = $warehouse_id;
+        return $this;
+    }
+    
+    public function setItemWithLotId(int $item_with_lot_id)
+    {
+        $this->item_with_lot_id = $item_with_lot_id;
+        return $this;
+    }
+    
+    public function setAdded(\DateTime $added)
+    {
+        $this->added = $added;
+        return $this;
+    }
+    
+    public function setOrderId(int | null $order_id)
+    {
+        $this->order_id = $order_id;
+        return $this;
+    }
+    
+    public function setStatusId(int $status_id)
+    {
+        $this->status_id = $status_id;
+        return $this;
+    }
+    
+    public function setWarehouse(Warehouse $warehouse)
+    {
+        $this->warehouse = $warehouse;
+        return $this;
+    }
+    
+    public function setStatus(ItemStatus $status)
+    {
+        $this->status = $status;
+        return $this;
+    }
+    
+    public function setItemWithLot(ItemWithLot $item_with_lot)
+    {
+        $this->item_with_lot = $item_with_lot;
+        return $this;
+    }
+    
 }
