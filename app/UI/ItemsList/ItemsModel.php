@@ -90,6 +90,7 @@ class ItemsModel
         $item
                 ->setName($name)
                 ->setArea($area)
+                ->setAdded((new \DateTime()))
                 ->setManufacturer($manufacturer)
                 ;
         $this->em->persist($item);
@@ -107,7 +108,7 @@ class ItemsModel
         );
         
         if (!$result) {
-            throw new NotFoundException('polozka s sarzi nenalezeny', NotFoundException::ITEMWITHLOT);
+            throw new NotFoundException('polozka se sarzi nenalezena', NotFoundException::ITEMWITHLOT);
         }
         return $result;
     }
@@ -127,6 +128,7 @@ class ItemsModel
             $item_wWith_lot
                     ->setItem($item)
                     ->setlot($lot)
+                    ->setAdded((new \DateTime()))
                     ;
             
             $this->em->persist($item_wWith_lot);

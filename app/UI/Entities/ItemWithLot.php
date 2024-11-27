@@ -20,6 +20,9 @@ class ItemWithLot
     #[ORM\Column(type: Types::STRING)]
     protected string $lot;
     
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    protected \DateTime $added;
+    
     #[ORM\ManyToOne(targetEntity: Item::class)]
     #[ORM\JoinColumn(name: 'item_id', referencedColumnName: 'id')]
     protected Item $item;
@@ -37,6 +40,11 @@ class ItemWithLot
     public function getlot(): string
     {
         return $this->lot;
+    }
+    
+    public function getAdded(): \DateTime
+    {
+        return $this->added;
     }
     
     public function getItem(): Item
@@ -59,6 +67,12 @@ class ItemWithLot
     public function setlot(string $lot)
     {
         $this->lot = $lot;
+        return $this;
+    }
+    
+    public function setAdded(\DateTime $added)
+    {
+        $this->added = $added;
         return $this;
     }
     

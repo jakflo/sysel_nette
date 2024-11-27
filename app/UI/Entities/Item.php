@@ -23,6 +23,9 @@ class Item
     #[ORM\Column(type: Types::INTEGER)]
     protected string $manufacturer_id;
     
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    protected \DateTime $added;
+    
     #[ORM\ManyToOne(targetEntity: Manufacturer::class)]
     #[ORM\JoinColumn(name: 'manufacturer_id', referencedColumnName: 'id')]
     protected Manufacturer $manufacturer;
@@ -41,6 +44,11 @@ class Item
     public function getArea(): float
     {
         return $this->area;
+    }
+    
+    public function getAdded(): \DateTime
+    {
+        return $this->added;
     }
     
     public function getManufacturer(): Manufacturer
@@ -63,6 +71,12 @@ class Item
     public function setArea(float $area)
     {
         $this->area = $area;
+        return $this;
+    }
+    
+    public function setAdded(\DateTime $added)
+    {
+        $this->added = $added;
         return $this;
     }
     

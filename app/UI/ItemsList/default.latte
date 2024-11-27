@@ -4,7 +4,7 @@
 <table class="w3_table">
     <tr>
         <th>Jméno položky</th><th>Zabraná plocha (m<sup>2</sup> / ks)</th>
-        <th>Výbobce</th><th></th><th></th>
+        <th>Přidáno</th><th>Výbobce</th><th></th><th></th>
     </tr>
     {foreach $items_list as $item}
         <tr>
@@ -22,6 +22,7 @@
                     </form>
                 {/if}
             </td>
+            <td>{$item->added->format('d.m.Y H:i')}</td>
             <td>
                 {$item->manufacturer} ({$item->country})
             </td>
