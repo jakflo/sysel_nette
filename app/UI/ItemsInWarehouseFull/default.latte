@@ -1,3 +1,29 @@
-{* Latte template *}
-
 {block content}
+
+<h1>Položky ve skladě</h1>
+
+<a n:href="ItemsInWarehouse:default"><button type="button">Pouze součty</button></a>
+<a n:href="Home:default"><button type="button">Domů</button></a>
+
+<form n:name="itemsListFilters">
+    <table class="w3_table">
+        <tr>
+            {include filters from '../filters_for_table.latte', filters:$fullListFilters}
+            <th>
+                <input n:name="filter" />
+                <a n:href="ItemsInWarehouseFull:default"><button type="button">Reset</button></a>
+            </th>
+        </tr>
+        {foreach $fullList as $item}
+            <tr>
+                <td>{$item['id']}</td>
+                <td>{$item['warehouse']}</td>
+                <td>{$item['item']}</td>
+                <td>{$item['status']}</td>
+                <td></td>
+            </tr>
+        {/foreach}
+    </table>
+</form>
+        
+{include paginator from '../filters_for_table.latte', paginator:$paginator}

@@ -10,7 +10,7 @@ class ItemsInWarehouseModel
 {
     public function __construct(
             protected \Nette\Database\Explorer $dbe, 
-            protected \Doctrine\ORM\EntityManager $em,             
+            protected \Doctrine\ORM\EntityManager $em, 
             protected \App\UI\ItemsList\ItemsModelFactory $items_model_factory, 
             protected \App\UI\WarehouseList\WarehouseModelFactory $warehouse_model_factory
     )
@@ -22,7 +22,7 @@ class ItemsInWarehouseModel
     {
         $item_status_term = $available_only ? "= 'available'" : "IN ('available', 'reserved')";
         $list = $this->em->createQuery(
-                "SELECT w.id AS warehouse_id, w.name AS warehouse, it.name AS item, COUNT(il.item_id) AS n 
+                "SELECT w.id AS warehouse_id, w.name AS warehouse, it.id AS item_id, it.name AS item, COUNT(il.item_id) AS n 
                 FROM App\\UI\\Entities\\WarehouseHasItem wi 
                 JOIN wi.warehouse w 
                 JOIN wi.item_with_lot il 
@@ -35,7 +35,7 @@ class ItemsInWarehouseModel
         
         return ArrayTools::groupMultiArray($list, 'warehouse');
     }
-    
+        
     public function getEmptyWarehousesListForSelect(bool $available_items_only)
     {
         $item_status_term = $available_items_only ? "= 'available'" : "IN ('available', 'reserved')";

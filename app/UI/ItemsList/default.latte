@@ -4,7 +4,7 @@
 <table class="w3_table">
     <tr>
         <th>Jméno položky</th><th>Zabraná plocha (m<sup>2</sup> / ks)</th>
-        <th>Přidáno</th><th>Výbobce</th><th></th><th></th>
+        <th>Přidáno</th><th>Výbobce</th><th></th>
     </tr>
     {foreach $items_list as $item}
         <tr>
@@ -26,7 +26,7 @@
             <td>
                 {$item->manufacturer} ({$item->country})
             </td>
-            <td>
+            <td class="action-buttons">
                 <div class="rename_item hidden" id="rename_div_{$item->id}">
                         <form n:name=renameItem class="rename_item_form">
                             <input n:name=name value="{$item->name}" />
@@ -36,14 +36,13 @@
                         </form>
                     </div>
                     <button type="button" class="rename_item_button" data-id="{$item->id}">Přejmenovat</button>
-            </td>
-            <td>
                     {include one_button_form from '../form_helper.latte', 
                         formName: 'deleteItem', 
                         isDisabled: $item->items_used > 0, 
                         itemId: $item->id, 
                         disabledTitle: 'Nelze smazat použitou položku'
                     }
+                    <a n:href="ItemsLotList:default $item->id"><button type="button">Seznam šarží</button></a>
             </td>
         </tr>
     {/foreach}

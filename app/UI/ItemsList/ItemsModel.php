@@ -20,8 +20,9 @@ class ItemsModel
         
     }
     
-    public function printList()
+    public function printList(bool $available_only = false)
     {
+        $shortnames = $available_only ? "'available'" : "'available', 'reserved'";
         return $this->dbe->query(
                 "SELECT i.*, m.name AS manufacturer, a.country, iu.items_stored, iu2.items_used
                 FROM item i 
@@ -33,7 +34,7 @@ class ItemsModel
                     JOIN item_status it ON wi.status_id = it.id 
                     JOIN item_with_lot il ON wi.item_with_lot_id = il.id 
                     JOIN item i ON il.item_id = i.id
-                    WHERE it.short_name IN ('available', 'reserved')
+                    WHERE it.short_name IN ({$shortnames})
                     GROUP BY i.id
                 ) AS iu ON iu.id = i.id
                 LEFT JOIN (
@@ -49,6 +50,11 @@ class ItemsModel
     public function printSimpleList(): array
     {
         return $this->dbe->query("SELECT id, name FROM item ORDER BY id")->fetchPairs();
+    }
+    
+    public function printItemStateList()
+    {
+        return $this->dbe->query("SELECT id, name FROM item_status ORDER BY id")->fetchPairs();
     }
     
     public function changeArea(int $item_id, float $area)

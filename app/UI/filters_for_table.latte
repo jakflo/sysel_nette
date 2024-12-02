@@ -1,0 +1,94 @@
+{* volano vlokem filters, ktery mu predava array filter *}
+{define sortable_buttons $filter}
+{if $filter['sortable']}
+    {var $filter_name = $filter['name']}
+    {var $get_params = $presenter->getHttpRequest()->getQuery()}
+    {var $selected_sortable = $get_params['sort_by'] ?? ''}
+    {var $selected_desc = isset($get_params['sort_desc']) ? $get_params['sort_desc'] == 1 : false}
+    {var $marked_asc = ($selected_sortable == $filter_name && !$selected_desc) ? 'marked' : ''}
+    {var $marked_desc = ($selected_sortable == $filter_name && $selected_desc) ? 'marked' : ''}
+    
+    {var $url_object = $presenter->getHttpRequest()->getUrl()}
+    {var $asc_link = $url_object->withQueryParameter('sort_by', $filter_name)->withQueryParameter('sort_desc', null)}
+    {var $desc_link = $url_object->withQueryParameter('sort_by', $filter_name)->withQueryParameter('sort_desc', 1)}
+    
+    <a href="{$asc_link}"><button class="{$marked_asc}" type="button">▲</button></a>
+    <a href="{$desc_link}"><button class="{$marked_desc}" type="button">▼</button></a>
+{/if}
+{/define}
+
+{* predavane promenne: filters(2D array obsahzujici type(string), name(string), sortable(bool)) *}
+{block filters}
+{foreach $filters as $filter}
+    {if ($filter['type'] == 'input')}
+        <th>
+            {var $cond_name = $filter['name'] . '_cond'}
+            {var $value_name = $filter['name'] . '_value'}
+            <label n:name="$cond_name" />
+            <select n:name="$cond_name" />
+            <input n:name="$value_name" />
+            {include sortable_buttons, $filter}
+        </th>
+    {elseif ($filter['type'] == 'none')}
+        <th>            
+            <label>{$filter['label']}</label>
+            {include sortable_buttons, $filter}
+        </th>
+    {elseif ($filter['type'] == 'select')}
+        <th>
+            {var $cond_name = $filter['name'] . '_cond'}
+            {var $value_name = $filter['name'] . '_value'}
+            <label n:name="$cond_name" />
+            <select n:name="$cond_name" />
+            <select n:name="$value_name" />
+            {include sortable_buttons, $filter}
+        </th>
+    {else}
+        <th><b>Neznýmá typ filtru</b></th>
+    {/if}
+{/foreach}
+{/block}
+
+{* predavane promenne: paginator(App\UI\Model\Paginator) *}
+{block paginator}
+{var $url_object = $presenter->getHttpRequest()->getUrl()}
+{var $current_page = $paginator->getCurrentPage()}
+{var $max_page = $paginator->getPagesCount()}
+
+{if ($current_page == 1)}
+    {var $start_page = 1}
+{elseif ($current_page == $max_page && $current_page > 2)}
+    {var $start_page = $current_page - 2}
+{else}
+    {var $start_page = $current_page - 1}
+{/if}
+
+{var $end_page = $start_page + 2}
+{if ($end_page > $max_page)}
+    {var $end_page = $start_page}
+{/if}
+
+<p>Nalezeno {$paginator->getRowsCount()} položek</p>
+<div class="strankovac">
+
+{if ($current_page == 1)}
+    <span class='grey'>&lt;&lt;</span>
+{else}
+    <a href="{$url_object->withQueryParameter('page', 1)}">&lt;&lt;</a>
+{/if}
+
+{for $p = $start_page; $p <= $end_page; $p++}
+    {if ($p == $current_page)}
+        <span class='curr_page'>{$p}</span>
+    {else}
+        <a href="{$url_object->withQueryParameter('page', $p)}">{$p}</a>
+    {/if}
+{/for}
+
+{if ($end_page < $max_page)}
+    <span>...</span>
+    <a href="{$url_object->withQueryParameter('page', $max_page)}">{$max_page}</a>
+{/if}
+
+</div>
+{/block}

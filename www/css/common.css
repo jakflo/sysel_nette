@@ -85,3 +85,12 @@ div.flash.success {
     font-weight: bold;
     color: green;
 }
+
+ul.unmarked {
+    list-style-type: none;
+    padding-left: 0px;
+}
+
+ul.unmarked li {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+}

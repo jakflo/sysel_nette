@@ -38,4 +38,17 @@ class ArrayTools
         return [null => '--------'] + $input;
     }
     
+    /**
+     * premeni vicepole na asociativni pole s pouze s parem klic - hodnota (ostatni sloupce jsou zahozeny)
+     * @param array $input
+     * @param string $key_name
+     * @param string $value_name
+     */
+    public static function multiarrayToAsocPairs(array $input, string $key_name, string $value_name)
+    {
+        $keys = array_column($input, $key_name);
+        $values = array_column($input, $value_name);
+        return array_combine($keys, $values);
+    }
+    
 }

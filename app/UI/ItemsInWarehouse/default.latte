@@ -22,7 +22,7 @@
                     </tr>
                     {foreach $items as $item}
                         <tr>
-                            <td>{$item['item']}</td>
+                            <td>{$item['item']} (<a target="_blank" n:href="ItemsLotList:default $item['item_id']">Seznam šarží</a>)</td>
                             <td>{$item['n']}</td>
                         </tr>
                     {/foreach}
@@ -45,6 +45,16 @@
         </div>
     {/foreach}
 </div>
+
+{if (count($not_used_items) > 0)}
+    <br />
+    <h4>Seznam nepoužitých položek</h4>
+    <ul class="unmarked">
+        {foreach $not_used_items as $not_used_item}            
+            <li>{$not_used_item['name']} (<a target="_blank" n:href="ItemsLotList:default $not_used_item['id']">Seznam šarží</a>)</li>
+        {/foreach}
+    </ul>
+{/if}
 
 {if (count($empty_warehouses) > 0)}
     <h4>Přidat položku do prázdného skladu</h4>

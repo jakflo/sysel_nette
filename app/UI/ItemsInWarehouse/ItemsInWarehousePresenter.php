@@ -28,9 +28,15 @@ final class ItemsInWarehousePresenter extends \Nette\Application\UI\Presenter
         
         $model = $this->items_in_warehouse_model_factory->create();
         $model->getEmptyWarehousesListForSelect(true);
+        
+        $items_model = $this->items_model_factory->create();
+        $items = $items_model->printList($mode == 'available-only');
+        $not_used_items = ArrayTools::searchInMultiArray($items, null, 'items_stored');
+        
         $this->template->title = 'Syslovo sklad | Položky ve skladě';
         $this->template->mode = $mode;
         $this->template->items_list = $model->getList($mode == 'available-only');
+        $this->template->not_used_items = $not_used_items;
         $this->template->empty_warehouses = $model->getEmptyWarehousesListForSelect($mode == 'available-only');
     }
     

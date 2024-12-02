@@ -9,14 +9,14 @@
             <th>Jméno skladu</th>
             <th>Volná plocha (m<sup>2</sup>)</th>
             <th>Vytvořeno</th>
-            <th></th><th></th>
+            <th></th>
         </tr>
         {foreach $warehouse_list as $warehouse}
             <tr>
                 <td>{$warehouse->name}</td>
                 <td>{$warehouse->area - $warehouse->area_filled} / {$warehouse->area}</td>
                 <td>{$warehouse->created->format('d. m. Y')}</td>
-                <td>
+                <td class="action-buttons">
                     <div class="rename_warehouse hidden" id="rename_div_{$warehouse->id}">
                         <form n:name=renameWarehouse class="rename_warehouse_form">
                             <input n:name=name value="{$warehouse->name}" />
@@ -26,8 +26,6 @@
                         </form>
                     </div>
                     <button type="button" class="rename_butt" data-id="{$warehouse->id}">Přejmenovat</button>
-                </td>
-                <td>
                     {include one_button_form from '../form_helper.latte', 
                         formName: 'deleteWarehouse', 
                         isDisabled: $warehouse->area_filled > 0, 

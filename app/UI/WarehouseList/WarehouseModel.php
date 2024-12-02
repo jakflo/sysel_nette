@@ -36,6 +36,11 @@ class WarehouseModel
         return $warehouses;
     }
     
+    public function printSimpleLIstForSelect()
+    {
+        return $this->dbe->query("SELECT id, name FROM Warehouse ORDER BY id")->fetchPairs();
+    }
+    
     public function rename(int $id, string $new_name)
     {
         $this->checkIfNameIsUsed($new_name);        
