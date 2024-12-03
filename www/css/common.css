@@ -52,14 +52,14 @@ p.message {
     color: green;
 }
 
-div.strankovac {
+div.paginator {
     margin: 15px 2px;
 }
-div.strankovac a, div.strankovac span {
+div.paginator a, div.paginator span {
     padding: 5px;
     font-size: 28px;
 }
-div.strankovac span.curr_page {
+div.paginator span.curr_page {
     background-color: greenyellow;
 }
 

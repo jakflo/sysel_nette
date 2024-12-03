@@ -12,6 +12,7 @@ class ItemsInWarehouseModel
             protected \Nette\Database\Explorer $dbe, 
             protected \Doctrine\ORM\EntityManager $em, 
             protected \App\UI\ItemsList\ItemsModelFactory $items_model_factory, 
+            protected \App\UI\ItemsLotList\ItemsLotModelFactory $items_lot_model_factory, 
             protected \App\UI\WarehouseList\WarehouseModelFactory $warehouse_model_factory
     )
     {
@@ -69,11 +70,11 @@ class ItemsInWarehouseModel
         
         $max_amount = $this->getItemMaxAmount($warehouse_id, $item_id);
         if ($amount > $max_amount) {
-            throw new WarehouseCapacityExceededException('tolik polozek se do skladu nevejde');
+            throw new WarehouseCapacityExceededException('Tolik polozek se do skladu nevejde');
         }
         
-        $items_model = $this->items_model_factory->create();
-        $item_with_lot = $items_model->createItemWithLot($item_id, $lot_name);
+        $items_lot_model = $this->items_lot_model_factory->create();
+        $item_with_lot = $items_lot_model->getOrCreateItemWithLot($item_id, $lot_name);
         $item_status = $this->em->getRepository(ItemStatus::class)->findOneBy(['short_name' => 'available']);
         
         $added_items = [];

@@ -8,7 +8,7 @@ use \Nette\Http\IRequest;
 
 abstract class TableFilterBase
 {
-    protected string|null $forced_order_by_tableDotColunbName = null;
+    protected string|null $forced_order_by_tableDotColumnName = null;
 
     abstract public function addItemToFormComponent(Form $form): Form;
     abstract public function addItemToParamsForLatte(array $params): array;
@@ -32,20 +32,20 @@ abstract class TableFilterBase
     
     /**
      * pokud se ma polozka tridit dle jineho DB sloupce, nez filtrovat (napr. u select se filtruje dle id, ale tridi dle name)
-     * @param string $new_tableDotColunbName DB tabulka.sloupec napr. user.name
+     * @param string $new_tableDotColumnName DB tabulka.sloupec napr. user.name
      * @return $this
      */
-    public function setForcedOrderByTableDotColunbName(string $new_tableDotColunbName)
+    public function setForcedOrderByTableDotColumnName(string $new_tableDotColumnName)
     {
-        $this->forced_order_by_tableDotColunbName = $new_tableDotColunbName;
+        $this->forced_order_by_tableDotColumnName = $new_tableDotColumnName;
         return $this;
     }
     
     protected function addOrderBy(Query|QueryBuilder $query, string $order_by, string $order_direction)
     {
-        $order_by_tableDotColunbName = $this->forced_order_by_tableDotColunbName ?? $this->tableDotColunbName;
+        $order_by_tableDotColumnName = $this->forced_order_by_tableDotColumnName ?? $this->tableDotColumnName;
         if ($order_by == $this->name) {
-            $query->orderBy($order_by_tableDotColunbName, $order_direction);
+            $query->orderBy($order_by_tableDotColumnName, $order_direction);
         }
     }
     

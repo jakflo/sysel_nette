@@ -55,7 +55,7 @@ final class ItemsInWarehousePresenter extends \Nette\Application\UI\Presenter
         $form
                 ->addInteger('amount')
                 ->setRequired()
-                ->addRule(Form::MIN, 'Musí být věrší jak 0', 1)
+                ->addRule(Form::MIN, 'Musí být větší jak 0', 1)
                 ;
         $form->addHidden('warehouse_id', 0);
         $form->addSubmit('sent', 'Přidat');
@@ -86,7 +86,7 @@ final class ItemsInWarehousePresenter extends \Nette\Application\UI\Presenter
         $form
                 ->addInteger('amount')
                 ->setRequired()
-                ->addRule(Form::MIN, 'Musí být věrší jak 0', 1)
+                ->addRule(Form::MIN, 'Musí být větší jak 0', 1)
                 ;
         $form->addSubmit('sent', 'Přidat');
         $form->onSuccess[] = [$this, 'doAddItems'];
@@ -109,7 +109,7 @@ final class ItemsInWarehousePresenter extends \Nette\Application\UI\Presenter
             $this->sendJson($response);
         } catch (\Exception $e) {          
             $response = [
-                'status' => 'falied', 
+                'status' => 'failed', 
                 'error' => $e->getMessage(), 
                 'code' => $e->getCode()
             ];

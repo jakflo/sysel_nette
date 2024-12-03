@@ -4,7 +4,7 @@ namespace App\UI\WarehouseList;
 
 use \Nette\Application\UI\Form;
 use \App\UI\Forms\ChangeName;
-use App\UI\Forms\DeleteItem;
+use \App\UI\Forms\DeleteItem;
 use \App\UI\Exceptions\UsedNameException;
 use \App\UI\Exceptions\NotFoundException;
 use \App\UI\WarehouseList\NotEmptyException;

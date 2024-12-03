@@ -19,12 +19,12 @@ class ArrayTools
         return $result;
     }
     
-    public static function groupMultiArray(array $input, string $gruop_by_key, bool $preserve_keys = false): array
+    public static function groupMultiArray(array $input, string $group_by_key, bool $preserve_keys = false): array
     {
         $result = [];
-        $gruop_by_values = array_column($input, $gruop_by_key);
+        $gruop_by_values = array_column($input, $group_by_key);
         foreach ($gruop_by_values as $item) {
-            $result[$item] = self::searchInMultiArray($input, $item, $gruop_by_key, $preserve_keys);
+            $result[$item] = self::searchInMultiArray($input, $item, $group_by_key, $preserve_keys);
         }
         return $result;
     }

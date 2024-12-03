@@ -11,7 +11,7 @@ class TableFilterSelect extends TableFilterBase
     public function __construct(
             protected string $name, 
             protected string $label, 
-            protected string $tableDotColunbName, 
+            protected string $tableDotColumnName, 
             protected array $items, 
             protected bool $sortable
     )
@@ -54,13 +54,13 @@ class TableFilterSelect extends TableFilterBase
         switch ($condition) {
             case 'equal': 
                 $query
-                    ->andWhere("{$this->tableDotColunbName} = :val")
+                    ->andWhere("{$this->tableDotColumnName} = :val")
                     ->setParameter('val', $value)
                     ;
                 break;
             case 'not_equal': 
                 $query
-                    ->andWhere("{$this->tableDotColunbName} != :val")
+                    ->andWhere("{$this->tableDotColumnName} != :val")
                     ->setParameter('val', $value)
                     ;
                 break;

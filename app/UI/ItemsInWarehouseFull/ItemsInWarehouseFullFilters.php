@@ -22,7 +22,7 @@ class ItemsInWarehouseFullFilters extends TableFilterCollection
         $statuses = $this->items_model_factory->create()->printItemStateList();
         $this
                 ->addFilter(new TableFilterSortOnly('id', '#', 'wi.id'))
-                ->addFilter((new TableFilterSelect('warehouse_id', 'Sklad', 'w.id', $warehouses, true))->setForcedOrderByTableDotColunbName('w.name'))
+                ->addFilter((new TableFilterSelect('warehouse_id', 'Sklad', 'w.id', $warehouses, true))->setForcedOrderByTableDotColumnName('w.name'))
                 ->addFilter(new TableFilterText('item_name', 'Položka', 'it.name', true))
                 ->addFilter(new TableFilterSelect('status_name', 'Stav', 'its.id', $statuses, false))
                 ;

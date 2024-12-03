@@ -17,7 +17,7 @@
 {/if}
 {/define}
 
-{* predavane promenne: filters(2D array obsahzujici type(string), name(string), sortable(bool)) *}
+{* predavane promenne: filters(2D array obsahujici type(string), name(string), sortable(bool)) *}
 {block filters}
 {foreach $filters as $filter}
     {if ($filter['type'] == 'input')}
@@ -44,7 +44,7 @@
             {include sortable_buttons, $filter}
         </th>
     {else}
-        <th><b>Neznýmá typ filtru</b></th>
+        <th><b>Neznámý typ filtru</b></th>
     {/if}
 {/foreach}
 {/block}
@@ -69,7 +69,7 @@
 {/if}
 
 <p>Nalezeno {$paginator->getRowsCount()} položek</p>
-<div class="strankovac">
+<div class="paginator">
 
 {if ($current_page == 1)}
     <span class='grey'>&lt;&lt;</span>

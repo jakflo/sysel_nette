@@ -28,7 +28,7 @@ class ItemsInWarehouseFullPresenter extends \Nette\Application\UI\Presenter
         $form = new Form();
         $form->setMethod('GET');
         $this->items_in_warehouse_full_filters_factory->create()->addItemToFormComponents($form);
-        $form->addSubmit('filter', 'Filtorvat');
+        $form->addSubmit('filter', 'Filtrovat');
         $form->onSuccess[] = [$this, 'itemsListFilters'];
         return $form;
     }

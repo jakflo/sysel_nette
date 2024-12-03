@@ -12,7 +12,7 @@ class TableFilterSortOnly extends TableFilterBase
     public function __construct(
             protected string $name, 
             protected string $label, 
-            protected string $tableDotColunbName
+            protected string $tableDotColumnName
     )
     {
         

@@ -14,7 +14,8 @@ class ItemsModel
     public function __construct(
             protected \Nette\Database\Explorer $dbe, 
             protected \Doctrine\ORM\EntityManager $em, 
-            protected \App\UI\ManufacturerList\ManufacturerModelFactory $manufacturer_model_factory
+            protected \App\UI\ManufacturerList\ManufacturerModelFactory $manufacturer_model_factory, 
+            protected \App\UI\ItemsLotList\ItemsLotModelFactory $items_lot_model_factory
     )
     {
         
@@ -77,12 +78,7 @@ class ItemsModel
     {
         $this->checkIfItemIsUsed($item_id, false);
         $item = $this->getItem($item_id);
-        
-        $lots = $this->em->getRepository(ItemWithLot::class)->findBy(['item_id' => $item]);
-        foreach ($lots as $lot) {
-            $this->em->remove($lot);
-        }
-        
+        $this->items_lot_model_factory->create()->deleteAllFromItem($item_id);
         $this->em->remove($item);
         $this->em->flush();
     }
@@ -103,47 +99,7 @@ class ItemsModel
         $this->em->flush();
     }
     
-    public function getItemWithLot(int $item_id, string $lot): ItemWithLot
-    {
-        $this->getItem($item_id);
-        $result = $this->em->getRepository(ItemWithLot::class)->findOneBy(
-                [
-                    'item_id' => $item_id, 
-                    'lot' => $lot
-                ]
-        );
-        
-        if (!$result) {
-            throw new NotFoundException('polozka se sarzi nenalezena', NotFoundException::ITEMWITHLOT);
-        }
-        return $result;
-    }
-    
-    public function createItemWithLot(int $item_id, string $lot): ItemWithLot
-    {
-        try {
-            $item_wWith_lot = $this->getItemWithLot($item_id, $lot);
-            return $item_wWith_lot;
-        } catch (NotFoundException $e) {
-            if ($e->getCode() != NotFoundException::ITEMWITHLOT) {
-                throw $e;
-            }
-            
-            $item = $this->getItem($item_id);
-            $item_wWith_lot = new ItemWithLot();
-            $item_wWith_lot
-                    ->setItem($item)
-                    ->setlot($lot)
-                    ->setAdded((new \DateTime()))
-                    ;
-            
-            $this->em->persist($item_wWith_lot);
-            $this->em->flush();
-            return $item_wWith_lot;
-        }
-    }
-    
-    protected function checkIfItemIsUsed(int $item_id, bool $stored_items_only)
+    public function checkIfItemIsUsed(int $item_id, bool $stored_items_only)
     {
         $statuse_term = $stored_items_only ? "AND s.short_name IN ('available', 'reserved')" : '';
         $item_is_used = $this->em->createQuery(

@@ -10,7 +10,7 @@ class TableFilterText extends TableFilterBase
     public function __construct(
             protected string $name, 
             protected string $label, 
-            protected string $tableDotColunbName, 
+            protected string $tableDotColumnName, 
             protected bool $sortable
     )
     {
@@ -51,25 +51,25 @@ class TableFilterText extends TableFilterBase
         switch ($condition) {
             case 'equal': 
                 $query
-                    ->andWhere("{$this->tableDotColunbName} = :val")
+                    ->andWhere("{$this->tableDotColumnName} = :val")
                     ->setParameter('val', $value)
                     ;
                 break;
             case 'not_equal': 
                 $query
-                    ->andWhere("{$this->tableDotColunbName} != :val")
+                    ->andWhere("{$this->tableDotColumnName} != :val")
                     ->setParameter('val', $value)
                     ;
                 break;
             case 'like': 
                 $query
-                    ->andWhere("{$this->tableDotColunbName} LIKE :val")
+                    ->andWhere("{$this->tableDotColumnName} LIKE :val")
                     ->setParameter('val', "%$value%")
                     ;
                 break;
             case 'not_like': 
                 $query
-                    ->andWhere("{$this->tableDotColunbName} NOT LIKE :val")
+                    ->andWhere("{$this->tableDotColumnName} NOT LIKE :val")
                     ->setParameter('val', "%$value%")
                     ;
                 break;
