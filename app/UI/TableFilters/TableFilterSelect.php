@@ -4,6 +4,7 @@ namespace App\UI\TableFilters;
 use \Nette\Application\UI\Form;
 use \Doctrine\ORM\QueryBuilder;
 use \Doctrine\ORM\Query;
+use \App\UI\TableFilters\QueryBuilderToSqlAdapter;
 use \App\UI\Tools\ArrayTools;
 
 class TableFilterSelect extends TableFilterBase
@@ -49,19 +50,19 @@ class TableFilterSelect extends TableFilterBase
             ];
     }
     
-    protected function addWhere(Query|QueryBuilder $query, string $condition, string $value)
+    protected function addWhere(Query|QueryBuilder|QueryBuilderToSqlAdapter $query, string $condition, string $value)
     {
         switch ($condition) {
             case 'equal': 
                 $query
-                    ->andWhere("{$this->tableDotColumnName} = :val")
-                    ->setParameter('val', $value)
+                    ->andWhere("{$this->tableDotColumnName} = :val_{$this->printHashedName($this->name)}")
+                    ->setParameter(':val_' . $this->printHashedName($this->name), $value)
                     ;
                 break;
             case 'not_equal': 
                 $query
-                    ->andWhere("{$this->tableDotColumnName} != :val")
-                    ->setParameter('val', $value)
+                    ->andWhere("{$this->tableDotColumnName} != :val_{$this->printHashedName($this->name)}")
+                    ->setParameter(':val_' . $this->printHashedName($this->name), $value)
                     ;
                 break;
             default :

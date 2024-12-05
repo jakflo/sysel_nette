@@ -4,6 +4,7 @@ namespace App\UI\TableFilters;
 use \Nette\Application\UI\Form;
 use \Doctrine\ORM\QueryBuilder;
 use \Doctrine\ORM\Query;
+use \App\UI\TableFilters\QueryBuilderToSqlAdapter;
 use \Nette\Http\IRequest;
 
 abstract class TableFilterBase
@@ -13,9 +14,9 @@ abstract class TableFilterBase
     abstract public function addItemToFormComponent(Form $form): Form;
     abstract public function addItemToParamsForLatte(array $params): array;
     abstract protected function printContitions(): array;
-    abstract protected function addWhere(Query|QueryBuilder $query, string $condition, string $value);
+    abstract protected function addWhere(Query|QueryBuilder|QueryBuilderToSqlAdapter $query, string $condition, string $value);
     
-    public function applyFilter(Query|QueryBuilder $query, IRequest $request)
+    public function applyFilter(Query|QueryBuilder|QueryBuilderToSqlAdapter $query, IRequest $request)
     {
         $condition = $request->getQuery($this->name . '_cond');
         $value = $request->getQuery($this->name . '_value');
@@ -30,6 +31,12 @@ abstract class TableFilterBase
         }
     }
     
+    // potrebuji rozlisit jmena parametru, tak k nim pridam jmeno filtrovaneho hodnoty, ale radsi ne naprimo, ale prvnich 6 znaku md5
+    public function printHashedName(string $name): string
+    {
+        return substr(md5($name), 0, 6);
+    }
+    
     /**
      * pokud se ma polozka tridit dle jineho DB sloupce, nez filtrovat (napr. u select se filtruje dle id, ale tridi dle name)
      * @param string $new_tableDotColumnName DB tabulka.sloupec napr. user.name
@@ -41,8 +48,12 @@ abstract class TableFilterBase
         return $this;
     }
     
-    protected function addOrderBy(Query|QueryBuilder $query, string $order_by, string $order_direction)
+    protected function addOrderBy(Query|QueryBuilder|QueryBuilderToSqlAdapter $query, string $order_by, string $order_direction)
     {
+        if (!in_array($order_direction, ['ASC', 'DESC'])) {
+            throw new \Exception('pripustne pouze ASC a DESC');
+        }
+        
         $order_by_tableDotColumnName = $this->forced_order_by_tableDotColumnName ?? $this->tableDotColumnName;
         if ($order_by == $this->name) {
             $query->orderBy($order_by_tableDotColumnName, $order_direction);

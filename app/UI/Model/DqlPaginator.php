@@ -6,12 +6,9 @@ use \Doctrine\ORM\QueryBuilder;
 use \Doctrine\ORM\Query;
 use \Nette\Http\IRequest;
 
-class Paginator
+class DqlPaginator extends PaginatorBase
 {
     protected PaginatorOrm $paginator;
-    protected int $rows_count;
-    protected int $pages_count;
-    protected int $current_page;
 
     public function __construct(
             protected QueryBuilder|Query $query, 
@@ -39,26 +36,6 @@ class Paginator
     public function getRows(): \ArrayIterator
     {
         return $this->paginator->getIterator();
-    }
-    
-    public function getPagesCount(): int
-    {
-        return $this->pages_count;
-    }
-    
-    public function getRowsCount(): int
-    {
-        return $this->rows_count;
-    }
-    
-    public function getItemsPerPage(): int
-    {
-        return $this->items_per_page;
-    }
-    
-    public function getCurrentPage(): int
-    {
-        return $this->current_page;
     }
     
 }

@@ -4,6 +4,7 @@ namespace App\UI\TableFilters;
 use \Nette\Application\UI\Form;
 use \Doctrine\ORM\QueryBuilder;
 use \Doctrine\ORM\Query;
+use \App\UI\TableFilters\QueryBuilderToSqlAdapter;
 
 class TableFilterSortOnly extends TableFilterBase
 {
@@ -38,7 +39,7 @@ class TableFilterSortOnly extends TableFilterBase
         return [];
     }
     
-    protected function addWhere(Query|QueryBuilder $query, string $condition, string $value)
+    protected function addWhere(Query|QueryBuilder|QueryBuilderToSqlAdapter $query, string $condition, string $value)
     {
         return $query;
     }

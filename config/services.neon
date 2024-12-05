@@ -1,6 +1,7 @@
 services:
 	- App\Core\RouterFactory::createRouter
 	- \Doctrine\ORM\EntityManager
+	- \App\UI\Model\Database
 
 includes:
 	- doctrine.neon

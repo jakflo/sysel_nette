@@ -4,6 +4,7 @@ namespace App\UI\TableFilters;
 use \Nette\Application\UI\Form;
 use \Doctrine\ORM\QueryBuilder;
 use \Doctrine\ORM\Query;
+use \App\UI\TableFilters\QueryBuilderToSqlAdapter;
 use \Nette\Http\IRequest;
 
 abstract class TableFilterCollection
@@ -39,7 +40,7 @@ abstract class TableFilterCollection
         return $params;
     }
     
-    public function applyFilters(Query|QueryBuilder $query, IRequest $request): Query|QueryBuilder
+    public function applyFilters(Query|QueryBuilder|QueryBuilderToSqlAdapter $query, IRequest $request): Query|QueryBuilder|QueryBuilderToSqlAdapter
     {
         foreach ($this->table_filters as $filter) {
             $filter->applyFilter($query, $request);
