@@ -97,7 +97,7 @@ final class ItemsListPresenter extends \Nette\Application\UI\Presenter
         
         try {
             $model->changeName((int)$data['id'], $data['name']);
-            $this->flashMessage('Plocha položky byla přejmenována', 'success');
+            $this->flashMessage('Položka byla přejmenována', 'success');
             $this->redirect('itemsList:default');
         } catch (UsedNameException $e) {
             $this->flashMessage('Chyba! Jméno položky je již použito', 'error');

@@ -1,2 +1,48 @@
 {block content}
-<h1>Seznam šarží položky</h1>
+<h1>Seznam šarží položky {$itemName}</h1>
+
+<form n:name="itemsLotListFilters">
+    <table class="w3_table">
+        <tr>
+            {include filters from '../filters_for_table.latte', filters:$lotListFilters}
+            <th>Přidáno</th>
+            <th>
+                <input n:name="filter" />
+                <a n:href="ItemsLotList:default $itemId"><button type="button">Reset</button></a>
+            </th>
+        </tr>
+    </table>
+</form>
+<table class="w3_table">
+    {foreach $lotList as $item}
+        <tr>
+            <td>{$item['lot']}</td>
+            <td>{$item['added']->format('d.m.Y H:i:s')}</td>
+            <td class="action-buttons">
+            {include rename_form from '../form_helper.latte', 
+                className: 'itemLot', 
+                itemId: $item->id, 
+                itemName: $item->lot
+            }
+            <button type="button" class="rename_item_lot_button" data-id="{$item->id}">Přejmenovat</button>
+            {include one_button_form from '../form_helper.latte', 
+                formName: 'deleteItemLot', 
+                isDisabled: $item->used > 0, 
+                itemId: $item->id, 
+                disabledTitle: 'Nelze smazat použitou položku'
+            }
+        </td>
+        </tr>
+    {/foreach}
+</table>
+        
+{include paginator from '../filters_for_table.latte', paginator:$paginator}
+
+<h4>Vytořit novou šarži</h4>
+{control newItemLot}
+
+{/block}
+
+{block moreScripts}
+    <script src="{$basePath}/js/items_lot_list.js"></script>
+{/block}

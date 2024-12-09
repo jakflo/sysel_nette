@@ -9,7 +9,7 @@ use \App\UI\Entities\Warehouse;
 class WarehouseModel
 {
     public function __construct(
-            protected \Nette\Database\Explorer $dbe, 
+            protected \App\UI\Model\Database $dbe, 
             protected \Doctrine\ORM\EntityManager $em
     )
     {

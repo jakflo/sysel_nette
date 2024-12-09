@@ -37,7 +37,7 @@ class ItemWithLot
         return $this->item_id;
     }
     
-    public function getlot(): string
+    public function getLot(): string
     {
         return $this->lot;
     }
@@ -64,7 +64,7 @@ class ItemWithLot
         return $this;
     }
     
-    public function setlot(string $lot)
+    public function setLot(string $lot)
     {
         $this->lot = $lot;
         return $this;

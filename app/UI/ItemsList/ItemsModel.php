@@ -12,7 +12,7 @@ use \App\UI\Exceptions\UsedNameException;
 class ItemsModel
 {
     public function __construct(
-            protected \Nette\Database\Explorer $dbe, 
+            protected \App\UI\Model\Database $dbe, 
             protected \Doctrine\ORM\EntityManager $em, 
             protected \App\UI\ManufacturerList\ManufacturerModelFactory $manufacturer_model_factory, 
             protected \App\UI\ItemsLotList\ItemsLotModelFactory $items_lot_model_factory

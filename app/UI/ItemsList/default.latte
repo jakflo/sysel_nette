@@ -27,22 +27,19 @@
                 {$item->manufacturer} ({$item->country})
             </td>
             <td class="action-buttons">
-                <div class="rename_item hidden" id="rename_div_{$item->id}">
-                        <form n:name=renameItem class="rename_item_form">
-                            <input n:name=name value="{$item->name}" />
-                            <input n:name=id value="{$item->id}" />
-                            <input n:name=sent />
-                            <button n:name=cancel class="rename_item_cancel" data-id="{$item->id}">Zrušit</button>
-                        </form>
-                    </div>
-                    <button type="button" class="rename_item_button" data-id="{$item->id}">Přejmenovat</button>
-                    {include one_button_form from '../form_helper.latte', 
-                        formName: 'deleteItem', 
-                        isDisabled: $item->items_used > 0, 
-                        itemId: $item->id, 
-                        disabledTitle: 'Nelze smazat použitou položku'
-                    }
-                    <a n:href="ItemsLotList:default $item->id"><button type="button">Seznam šarží</button></a>
+                {include rename_form from '../form_helper.latte', 
+                    className: 'item', 
+                    itemId: $item->id, 
+                    itemName: $item->name
+                }
+                <button type="button" class="rename_item_button" data-id="{$item->id}">Přejmenovat</button>
+                {include one_button_form from '../form_helper.latte', 
+                    formName: 'deleteItem', 
+                    isDisabled: $item->items_used > 0, 
+                    itemId: $item->id, 
+                    disabledTitle: 'Nelze smazat použitou položku'
+                }
+                <a n:href="ItemsLotList:default $item->id"><button type="button">Seznam šarží</button></a>
             </td>
         </tr>
     {/foreach}

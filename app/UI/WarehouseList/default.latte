@@ -17,14 +17,11 @@
                 <td>{$warehouse->area - $warehouse->area_filled} / {$warehouse->area}</td>
                 <td>{$warehouse->created->format('d. m. Y')}</td>
                 <td class="action-buttons">
-                    <div class="rename_warehouse hidden" id="rename_div_{$warehouse->id}">
-                        <form n:name=renameWarehouse class="rename_warehouse_form">
-                            <input n:name=name value="{$warehouse->name}" />
-                            <input n:name=id value="{$warehouse->id}" />
-                            <input n:name=sent />
-                            <button n:name=cancel class="rename_warehouse_cancel" data-id="{$warehouse->id}">Zrušit</button>
-                        </form>
-                    </div>
+                    {include rename_form from '../form_helper.latte', 
+                        className: 'warehouse', 
+                        itemId: $warehouse->id, 
+                        itemName: $warehouse->name
+                    }
                     <button type="button" class="rename_butt" data-id="{$warehouse->id}">Přejmenovat</button>
                     {include one_button_form from '../form_helper.latte', 
                         formName: 'deleteWarehouse', 

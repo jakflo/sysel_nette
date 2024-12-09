@@ -51,7 +51,14 @@ class QueryBuilderToSqlAdapter
     
     public function getWhereTerm(bool $print_where): string
     {
-        $where_word = ($print_where && !empty($this->where_term)) ? 'WHERE ' : '';
+        if ($print_where && !empty($this->where_term)) {
+            $where_word = 'WHERE ';
+        } elseif (!$print_where && !empty($this->where_term)) {
+            $where_word = 'AND ';
+        } else {
+            $where_word = '';
+        }
+        
         return $where_word . $this->where_term;
     }
     
