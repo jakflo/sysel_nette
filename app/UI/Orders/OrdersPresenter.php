@@ -8,6 +8,6 @@ final class OrdersPresenter extends \Nette\Application\UI\Presenter
 {
     public function renderDefault()
     {
-//        $this->template->reee = $this->dbe->query("SELECT * FROM warehouse");
+//        $this->template->reee = $this->db->query("SELECT * FROM warehouse");
     }
 }

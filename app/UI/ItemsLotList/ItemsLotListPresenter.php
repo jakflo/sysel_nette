@@ -12,6 +12,8 @@ use \App\UI\ItemsLotList\ItemLotIsUsedException;
 
 class ItemsLotListPresenter extends \Nette\Application\UI\Presenter
 {
+    use \App\UI\Traits\DateTools;
+
     protected SqlPaginator $item_lot_list;
     public function __construct(
             protected \App\UI\ItemsLotList\ItemsLotModelFactory $items_lot_model_factory, 

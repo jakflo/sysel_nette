@@ -9,7 +9,7 @@ use \App\UI\Entities\Warehouse;
 class WarehouseModel
 {
     public function __construct(
-            protected \App\UI\Model\Database $dbe, 
+            protected \App\UI\Model\Database $db, 
             protected \Doctrine\ORM\EntityManager $em
     )
     {
@@ -18,7 +18,7 @@ class WarehouseModel
     
     public function printList()
     {
-        $warehouses = $this->dbe->query(
+        $warehouses = $this->db->fetchAllObjects(
                 "SELECT w.*, wa.area_filled
                 FROM warehouse w
                 LEFT JOIN 
@@ -30,15 +30,15 @@ class WarehouseModel
                     JOIN item_status it ON wi.status_id = it.id
                     WHERE it.short_name IN ('available', 'reserved')
                     GROUP BY wi.warehouse_id
-                ) AS wa ON wa.warehouse_id = w.id
+                ) AS wa ON wa.warehouse_id = w.id                
                 ORDER BY w.id"
-        )->fetchAll();        
+        );        
         return $warehouses;
     }
     
     public function printSimpleLIstForSelect()
     {
-        return $this->dbe->query("SELECT id, name FROM Warehouse ORDER BY id")->fetchPairs();
+        return $this->db->fetchPairs("SELECT id, name FROM Warehouse ORDER BY id");
     }
     
     public function rename(int $id, string $new_name)

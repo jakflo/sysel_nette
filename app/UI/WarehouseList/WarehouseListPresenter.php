@@ -11,6 +11,8 @@ use \App\UI\WarehouseList\NotEmptyException;
 
 final class WarehouseListPresenter extends \Nette\Application\UI\Presenter
 {
+    use \App\UI\Traits\DateTools;
+    
     public function __construct(
         protected \App\UI\WarehouseList\WarehouseModelFactory $model_factory
     )

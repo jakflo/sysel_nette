@@ -12,7 +12,7 @@ use \App\UI\Exceptions\UsedNameException;
 class ItemsModel
 {
     public function __construct(
-            protected \App\UI\Model\Database $dbe, 
+            protected \App\UI\Model\Database $db, 
             protected \Doctrine\ORM\EntityManager $em, 
             protected \App\UI\ManufacturerList\ManufacturerModelFactory $manufacturer_model_factory, 
             protected \App\UI\ItemsLotList\ItemsLotModelFactory $items_lot_model_factory
@@ -24,7 +24,7 @@ class ItemsModel
     public function printList(bool $available_only = false)
     {
         $shortnames = $available_only ? "'available'" : "'available', 'reserved'";
-        return $this->dbe->query(
+        return $this->db->fetchAllObjects(
                 "SELECT i.*, m.name AS manufacturer, a.country, iu.items_stored, iu2.items_used
                 FROM item i 
                 JOIN manufacturer m ON i.manufacturer_id = m.id 
@@ -45,17 +45,17 @@ class ItemsModel
                     JOIN item i ON il.item_id = i.id
                     GROUP BY i.id
                 ) AS iu2 ON iu2.id = i.id"
-        )->fetchAll();
+        );
     }
     
     public function printSimpleList(): array
     {
-        return $this->dbe->query("SELECT id, name FROM item ORDER BY id")->fetchPairs();
+        return $this->db->fetchPairs("SELECT id, name FROM item ORDER BY id");
     }
     
     public function printItemStateList()
     {
-        return $this->dbe->query("SELECT id, name FROM item_status ORDER BY id")->fetchPairs();
+        return $this->db->fetchPairs("SELECT id, name FROM item_status ORDER BY id");
     }
     
     public function changeArea(int $item_id, float $area)

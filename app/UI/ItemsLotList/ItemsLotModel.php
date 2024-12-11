@@ -11,7 +11,7 @@ use \Nette\Http\IRequest;
 class ItemsLotModel
 {
     public function __construct(
-            protected \App\UI\Model\Database $dbe, 
+            protected \App\UI\Model\Database $db, 
             protected \Doctrine\ORM\EntityManager $em, 
             protected \App\UI\ItemsList\ItemsModelFactory $items_model_factory, 
             protected \App\UI\Model\SqlPaginatorFactory $sql_paginator_factory
@@ -41,8 +41,8 @@ class ItemsLotModel
                 ) AS ilu ON il.id = ilu.id 
                 WHERE il.item_id = :item_id {$adapter->getWhereTerm(false)} {$adapter->getOrderByTerm(true)}";
         
-        $parameters = array_merge([':item_id' => $item_id], $adapter->getParameters());
-        $list_page = $this->sql_paginator_factory->create($sql, $parameters, 15, $request);
+        $parameters = array_merge(['item_id' => $item_id], $adapter->getParameters());
+        $list_page = $this->sql_paginator_factory->create($request, 15, $sql, $parameters);
         return $list_page;
     }
     

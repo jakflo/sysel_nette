@@ -17,7 +17,7 @@
     {foreach $lotList as $item}
         <tr>
             <td>{$item['lot']}</td>
-            <td>{$item['added']->format('d.m.Y H:i:s')}</td>
+            <td>{$presenter->formatEnDateTimeToCzFormat($item['added'])}</td>
             <td class="action-buttons">
             {include rename_form from '../form_helper.latte', 
                 className: 'itemLot', 

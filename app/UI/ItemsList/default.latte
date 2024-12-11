@@ -22,7 +22,7 @@
                     </form>
                 {/if}
             </td>
-            <td>{$item->added->format('d.m.Y H:i')}</td>
+            <td>{$presenter->formatEnDateTimeToCzFormat($item->added)}</td>
             <td>
                 {$item->manufacturer} ({$item->country})
             </td>

@@ -53,25 +53,25 @@ class TableFilterText extends TableFilterBase
             case 'equal': 
                 $query
                     ->andWhere("{$this->tableDotColumnName} = :val_{$this->printHashedName($this->name)}")
-                    ->setParameter(':val_' . $this->printHashedName($this->name), $value)
+                    ->setParameter('val_' . $this->printHashedName($this->name), $value)
                     ;
                 break;
             case 'not_equal': 
                 $query
                     ->andWhere("{$this->tableDotColumnName} != :val_{$this->printHashedName($this->name)}")
-                    ->setParameter(':val_' . $this->printHashedName($this->name), $value)
+                    ->setParameter('val_' . $this->printHashedName($this->name), $value)
                     ;
                 break;
             case 'like': 
                 $query
                     ->andWhere("{$this->tableDotColumnName} LIKE :val_{$this->printHashedName($this->name)}")
-                    ->setParameter(':val_' . $this->printHashedName($this->name), "%$value%")
+                    ->setParameter('val_' . $this->printHashedName($this->name), "%$value%")
                     ;
                 break;
             case 'not_like': 
                 $query
                     ->andWhere("{$this->tableDotColumnName} NOT LIKE :val_{$this->printHashedName($this->name)}")
-                    ->setParameter(':val_' . $this->printHashedName($this->name), "%$value%")
+                    ->setParameter('val_' . $this->printHashedName($this->name), "%$value%")
                     ;
                 break;
             default :

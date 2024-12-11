@@ -8,8 +8,7 @@ class ItemsInWarehouseFullModel
 {
     public function __construct(
             protected \Doctrine\ORM\EntityManager $em, 
-            protected \App\UI\ItemsInWarehouseFull\ItemsInWarehouseFullFiltersFactory $items_in_warehouse_full_filters_factory, 
-            protected \App\UI\Model\SqlPaginatorFactory $sql_paginator_factory
+            protected \App\UI\ItemsInWarehouseFull\ItemsInWarehouseFullFiltersFactory $items_in_warehouse_full_filters_factory
     )
     {
         

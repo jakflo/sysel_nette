@@ -1,6 +1,8 @@
 <?php
 namespace App\UI\Tools;
 
+use \Nette\Utils\ArrayHash;
+
 class ArrayTools
 {
     public static function searchInMultiArray(array $input, $value, string $search_in_key, bool $preserve_keys = false): array
@@ -44,11 +46,19 @@ class ArrayTools
      * @param string $key_name
      * @param string $value_name
      */
-    public static function multiarrayToAsocPairs(array $input, string $key_name, string $value_name)
+    public static function multiarrayToAsocPairs(array $input, string $key_name, string $value_name): array
     {
         $keys = array_column($input, $key_name);
         $values = array_column($input, $value_name);
         return array_combine($keys, $values);
+    }
+    
+    public static function multiarrayToArrayOfObjects(array $input): array
+    {
+        foreach ($input as &$row) {
+            $row = ArrayHash::from($row, false);
+        }
+        return $input;
     }
     
 }

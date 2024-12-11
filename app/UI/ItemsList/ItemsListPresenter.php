@@ -14,6 +14,8 @@ use \App\UI\Exceptions\UsedNameException;
 
 final class ItemsListPresenter extends \Nette\Application\UI\Presenter
 {
+    use \App\UI\Traits\DateTools;
+
     public function __construct(
             protected \App\UI\ItemsList\ItemsModelFactory $items_model_factory, 
             protected \App\UI\ManufacturerList\ManufacturerModelFactory $manufacturer_model_factory

@@ -9,7 +9,7 @@ use \App\UI\Entities\WarehouseHasItem;
 class ItemsInWarehouseModel
 {
     public function __construct(
-            protected \App\UI\Model\Database $dbe, 
+            protected \App\UI\Model\Database $db, 
             protected \Doctrine\ORM\EntityManager $em, 
             protected \App\UI\ItemsList\ItemsModelFactory $items_model_factory, 
             protected \App\UI\ItemsLotList\ItemsLotModelFactory $items_lot_model_factory, 
@@ -41,7 +41,7 @@ class ItemsInWarehouseModel
     {
         $item_status_term = $available_items_only ? "= 'available'" : "IN ('available', 'reserved')";
         
-        return $this->dbe->query(
+        return $this->db->fetchPairs(
                 "SELECT w.id, w.name 
                 FROM warehouse w 
                 LEFT JOIN 
@@ -52,7 +52,7 @@ class ItemsInWarehouseModel
                     WHERE ist.short_name {$item_status_term}
                 ) AS wi ON wi.warehouse_id = w.id 
                 WHERE wi.id IS NULL"
-        )->fetchPairs();
+        );
     }
     
     public function getItemMaxAmount(int $warehouse_id, int $item_id): int

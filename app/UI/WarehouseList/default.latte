@@ -15,7 +15,7 @@
             <tr>
                 <td>{$warehouse->name}</td>
                 <td>{$warehouse->area - $warehouse->area_filled} / {$warehouse->area}</td>
-                <td>{$warehouse->created->format('d. m. Y')}</td>
+                <td>{$presenter->formatEnDateToCzFormat($warehouse->created)}</td>
                 <td class="action-buttons">
                     {include rename_form from '../form_helper.latte', 
                         className: 'warehouse', 
