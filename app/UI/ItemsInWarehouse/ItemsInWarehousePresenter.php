@@ -27,9 +27,8 @@ final class ItemsInWarehousePresenter extends \Nette\Application\UI\Presenter
         }
         
         $model = $this->items_in_warehouse_model_factory->create();
-        $model->getEmptyWarehousesListForSelect(true);
-        
         $items_model = $this->items_model_factory->create();
+        
         $items = $items_model->printList($mode == 'available-only');
         $not_used_items = ArrayTools::searchInMultiArray($items, null, 'items_stored');
         

@@ -75,7 +75,7 @@ class WarehouseModel
         $this->em->flush();
     }
     
-    public function create(string $name, int $area)
+    public function create(string $name, int $area): int
     {
         $this->checkIfNameIsUsed($name);
         
@@ -86,6 +86,7 @@ class WarehouseModel
                 ;
         $this->em->persist($warehouse);
         $this->em->flush();
+        return $warehouse->getId();
     }
     
     public function getUsedSpace(int $id): float

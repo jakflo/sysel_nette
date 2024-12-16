@@ -75,15 +75,15 @@ class ItemsLotModel
     {
         $this->checkNameIsUsed($item_id, $lot);
         $item = $this->items_model_factory->create()->getItem($item_id);
-        $item_wWith_lot = new ItemWithLot();
-        $item_wWith_lot
+        $item_with_lot = new ItemWithLot();
+        $item_with_lot
                 ->setItem($item)
                 ->setlot($lot)
                 ->setAdded((new \DateTime()))
                 ;
-        $this->em->persist($item_wWith_lot);
+        $this->em->persist($item_with_lot);
         $this->em->flush();
-        return $item_wWith_lot;
+        return $item_with_lot;
     }
     
     public function getOrCreateItemWithLot(int $item_id, string $lot): ItemWithLot
@@ -113,7 +113,7 @@ class ItemsLotModel
     public function renameItemLot(int $item_lot_id, string $new_lot)
     {
         $item_lot = $this->getItemWithLot($item_lot_id);
-        $this->checkNameIsUsed($item_lot->getItemId(), $new_lot);
+        $this->checkNameIsUsed($item_lot->getItem()->getId(), $new_lot);
         $item_lot->setLot($new_lot);
         $this->em->flush();
     }

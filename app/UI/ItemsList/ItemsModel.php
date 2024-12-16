@@ -1,10 +1,7 @@
 <?php
 namespace App\UI\ItemsList;
 
-use \App\UI\Entities\WarehouseHasItem;
 use \App\UI\Entities\Item;
-use \App\UI\Entities\Manufacturer;
-use \App\UI\Entities\ItemWithLot;
 use \App\UI\ItemsList\ItemIsUsedException;
 use \App\UI\Exceptions\NotFoundException;
 use \App\UI\Exceptions\UsedNameException;
@@ -83,7 +80,7 @@ class ItemsModel
         $this->em->flush();
     }
     
-    public function create(string $name, float $area, int $manufacturer_id)
+    public function create(string $name, float $area, int $manufacturer_id): int
     {
         $this->checkIfNameIsUsed($name);
         $manufacturer = $this->manufacturer_model_factory->create()->getManufacturer($manufacturer_id);
@@ -97,6 +94,7 @@ class ItemsModel
                 ;
         $this->em->persist($item);
         $this->em->flush();
+        return $item->getId();
     }
     
     public function checkIfItemIsUsed(int $item_id, bool $stored_items_only)
