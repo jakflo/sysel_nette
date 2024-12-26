@@ -17,3 +17,5 @@ echo '<br /><br />---------Items in warehouse tests---------';
 $factory->getItemsInWarehouseList()->run();
 echo '<br /><br />---------Items lot tests---------';
 $factory->getItemsLot()->run();
+echo '<br /><br />---------Items search tests---------';
+$factory->getSearchItems()->run();

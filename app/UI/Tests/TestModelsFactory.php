@@ -8,7 +8,8 @@ class TestModelsFactory
             protected \App\UI\Tests\WarehouseListFactory $warehouse_list_factory, 
             protected \App\UI\Tests\ItemsListFactory $items_list_factory, 
             protected \App\UI\Tests\ItemsInWarehouseListFactory $items_in_warehouse_list_factory, 
-            protected \App\UI\Tests\ItemsLotFactory $items_lot_factory
+            protected \App\UI\Tests\ItemsLotFactory $items_lot_factory, 
+            protected \App\UI\Tests\SearchItemsFactory $search_items_factory
     )
     {
         
@@ -32,6 +33,11 @@ class TestModelsFactory
     public function getItemsLot(): \App\UI\Tests\ItemsLot
     {
         return $this->items_lot_factory->create();
+    }
+    
+    public function getSearchItems(): \App\UI\Tests\SearchItems
+    {
+        return $this->search_items_factory->create();
     }
     
 }

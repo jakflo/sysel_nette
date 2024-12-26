@@ -18,7 +18,7 @@ class ItemsInWarehouseFullFilters extends TableFilterCollection
     
     public function setFilters() 
     {
-        $warehouses = $this->warehouse_model_factory->create()->printSimpleLIstForSelect();
+        $warehouses = $this->warehouse_model_factory->create()->printSimpleListForSelect();
         $statuses = $this->items_model_factory->create()->printItemStateList();
         $this
                 ->addFilter(new TableFilterSortOnly('id', '#', 'wi.id'))

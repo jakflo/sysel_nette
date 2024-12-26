@@ -19,9 +19,11 @@ class ItemsInWarehouseModel
     
     }
     
-    public function getList(bool $available_only)
+    public function getList(bool $available_only, array|null $warehouses_id = null, array|null $items_id = null)
     {
         $item_status_term = $available_only ? "= 'available'" : "IN ('available', 'reserved')";
+        $warehouses_term = $warehouses_id ? "AND w.id IN(:wid)" : "";
+        $items_term = $items_id ? "AND it.id IN(:itid)" : "";
         $list = $this->em->createQuery(
                 "SELECT w.id AS warehouse_id, w.name AS warehouse, it.id AS item_id, it.name AS item, COUNT(il.item_id) AS n 
                 FROM App\\UI\\Entities\\WarehouseHasItem wi 
@@ -29,12 +31,20 @@ class ItemsInWarehouseModel
                 JOIN wi.item_with_lot il 
                 JOIN il.item it 
                 JOIN wi.status its 
-                WHERE its.short_name {$item_status_term} 
+                WHERE its.short_name {$item_status_term} {$warehouses_term} {$items_term} 
                 GROUP BY wi.warehouse_id, il.item_id 
                 ORDER BY wi.warehouse_id, il.item_id"
-        )->getResult();
+        );
+
+        if ($warehouses_id) {
+            $list->setParameter('wid', $warehouses_id);
+        }
+        if ($items_id) {
+            $list->setParameter('itid', $items_id);
+        }
+        $result = $list->getResult();
         
-        return ArrayTools::groupMultiArray($list, 'warehouse');
+        return ArrayTools::groupMultiArray($result, 'warehouse');
     }
         
     public function getEmptyWarehousesListForSelect(bool $available_items_only)

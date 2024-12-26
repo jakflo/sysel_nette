@@ -1,4 +1,70 @@
 {block content}
 <h1>Hledat položky</h1>
 
+<span id="data_for_react" class="hidden">{$data_for_react}</span>
+<div id="search_react"></div>
+
+{if ($items_requested)}
+    <h3>Nalezené položky</h3>
+    <table class="w3_table" id="found_items">
+        <tr>
+            <td></td>
+            {foreach $items_query->getWarehouseNames() as $warehouse}
+                <th>{$warehouse}</th>
+            {/foreach}
+        </tr>
+        {foreach $items_requested as $item_requested}
+            <tr>
+                <th>{$items_query->getItemNames()[$item_requested['item_id']]}</th>
+                {var $item_amount_requested = $item_requested['item_amount']}
+                {foreach $items_query->getWarehouseNames() as $warehouse_id => $warehouse_name}
+                    {var $item_amount_in_warehouse = $items_query->getItemAmount($item_requested['item_id'], $warehouse_id)}
+                    {var $cell_color = ($item_amount_requested > $item_amount_in_warehouse) ? 'red' : 'green'}
+                    <td class={$cell_color}>{$item_amount_in_warehouse} / {$item_amount_requested}</td>
+                {/foreach}
+            </tr>
+        {/foreach}        
+    </table>
+        
+    {if (count($items_query->getWarehousesWithAllItems()) > 0)}
+    {else}
+        <h3>Všechny položky nelze získat z jediného skladu.</h3>
+    {/if}
+    
+    {if (count($items_query->getItemsNotFound()) > 0)}
+        <h3>Chybějící položky</h3>
+        <table class="simple_borderless" id="missing_items">
+            {foreach $items_query->getItemsNotFound() as $missing_item}
+                <tr>
+                    <th>{$items_query->getItemNames()[$missing_item['item_id']]}</th>
+                    <td>{$missing_item['item_amount']}</td>
+                </tr>
+            {/foreach}
+        </table>
+    {/if}
+    {if (count($items_query->getWarehousesWithAllItems()) > 0)}
+        <h3>Sklady, kde jsou všechny položky v žádaném množství:</h3>
+        <ul id="warehouses_with_all_items">
+            {foreach $items_query->getWarehousesWithAllItems() as $warehouses_with_all_items}
+                <li>{$warehouses_with_all_items}</li>
+            {/foreach}
+        </ul>
+    {/if}
+{/if}
+
+<br />
+<a n:href="Home:default"><button type="button">Domů</button></a>
+{/block}
+
+{block moreScripts}
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel" src="{$basePath}/js/search_items/main.js"></script>
+    <script type="text/babel" src="{$basePath}/js/search_items/SearchForm.js"></script>
+    <script type="text/babel" src="{$basePath}/js/search_items/Warehouses.js"></script>
+    <script type="text/babel" src="{$basePath}/js/search_items/ItemRowSelect.js"></script>
+    <script type="text/babel" src="{$basePath}/js/search_items/ItemRowAmount.js"></script>
+    <script type="text/babel" src="{$basePath}/js/search_items/ItemRowDelete.js"></script>
+    <script type="text/babel" src="{$basePath}/js/search_items/OutputForm.js"></script>
 {/block}

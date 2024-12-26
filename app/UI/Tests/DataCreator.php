@@ -95,7 +95,7 @@ class DataCreator
         return $return;
     }
     
-    protected function reserveItems(int $warehouse_id, int $item_id, int $amount)
+    public function reserveItems(int $warehouse_id, int $item_id, int $amount)
     {
         $items_in_warehouse = $this->em->createQuery(
                 "SELECT wi 
