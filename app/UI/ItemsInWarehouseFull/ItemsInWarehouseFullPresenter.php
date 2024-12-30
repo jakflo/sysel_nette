@@ -35,7 +35,7 @@ class ItemsInWarehouseFullPresenter extends \Nette\Application\UI\Presenter
     
     public function itemsListFilters(Form $form, $data)
     {
-        
+        $this->items_in_warehouse_full_filters_factory->create()->addItemFormOnSubmit($form, $data);
     }
     
 }

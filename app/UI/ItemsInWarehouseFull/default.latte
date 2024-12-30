@@ -19,6 +19,7 @@
                 <td>{$item['id']}</td>
                 <td>{$item['warehouse']}</td>
                 <td>{$item['item']}</td>
+                <td>{$item['added']->format('d. m. Y')}</td>
                 <td>{$item['status']}</td>
                 <td></td>
             </tr>
@@ -27,3 +28,8 @@
 </form>
         
 {include paginator from '../filters_for_table.latte', paginator:$paginator}
+{/block}
+
+{block moreScripts}
+    <script src="{$basePath}/js/items_in_warehouses_full_list.js"></script>
+{/block}

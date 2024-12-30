@@ -14,17 +14,18 @@ abstract class TableFilterBase
     abstract public function addItemToFormComponent(Form $form): Form;
     abstract public function addItemToParamsForLatte(array $params): array;
     abstract protected function printContitions(): array;
-    abstract protected function addWhere(Query|QueryBuilder|QueryBuilderToSqlAdapter $query, string $condition, string $value);
+    abstract protected function addWhere(Query|QueryBuilder|QueryBuilderToSqlAdapter $query, string $condition, string $value, string|null $value_2);
     
     public function applyFilter(Query|QueryBuilder|QueryBuilderToSqlAdapter $query, IRequest $request)
     {
         $condition = $request->getQuery($this->name . '_cond');
         $value = $request->getQuery($this->name . '_value');
+        $value_2 = $request->getQuery($this->name . '_value_2') ?? null;
         $order_by = $request->getQuery('sort_by');
         $order_direction = $request->getQuery('sort_desc') == 1 ? 'DESC' : 'ASC';
         
         if ($value) {
-            $this->addWhere($query, $condition, $value);
+            $this->addWhere($query, $condition, $value, $value_2);
         }
         if ($this->sortable && $order_by) {
             $this->addOrderBy($query, $order_by, $order_direction);
@@ -46,6 +47,11 @@ abstract class TableFilterBase
     {
         $this->forced_order_by_tableDotColumnName = $new_tableDotColumnName;
         return $this;
+    }
+    
+    public function addItemFormOnSubmit(Form $form, $data)
+    {
+        
     }
     
     protected function addOrderBy(Query|QueryBuilder|QueryBuilderToSqlAdapter $query, string $order_by, string $order_direction)

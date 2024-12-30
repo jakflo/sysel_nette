@@ -39,7 +39,7 @@ class TableFilterSortOnly extends TableFilterBase
         return [];
     }
     
-    protected function addWhere(Query|QueryBuilder|QueryBuilderToSqlAdapter $query, string $condition, string $value)
+    protected function addWhere(Query|QueryBuilder|QueryBuilderToSqlAdapter $query, string $condition, string $value, string|null $value_2)
     {
         return $query;
     }

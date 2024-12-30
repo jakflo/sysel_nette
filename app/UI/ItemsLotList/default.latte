@@ -5,7 +5,6 @@
     <table class="w3_table">
         <tr>
             {include filters from '../filters_for_table.latte', filters:$lotListFilters}
-            <th>Přidáno</th>
             <th>
                 <input n:name="filter" />
                 <a n:href="ItemsLotList:default $itemId"><button type="button">Reset</button></a>

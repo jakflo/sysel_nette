@@ -11,4 +11,7 @@ $(function(){
         $(".rename_item_lot_button[data-id='" + id + "']").removeClass('hidden');
     });
     
+    var forms = new CommonForms();
+    forms.setDateFilters();
+    
 });

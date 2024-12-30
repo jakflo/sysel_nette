@@ -32,6 +32,13 @@ abstract class TableFilterCollection
         return $form;
     }
     
+    public function addItemFormOnSubmit(Form $form, $data)
+    {
+        foreach ($this->table_filters as $filter) {
+            $filter->addItemFormOnSubmit($form, $data);
+        }
+    }
+    
     public function addItemToParamsForLatte(array $params = []): array
     {
         foreach ($this->table_filters as $filter) {

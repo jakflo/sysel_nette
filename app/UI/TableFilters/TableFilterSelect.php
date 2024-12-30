@@ -50,7 +50,7 @@ class TableFilterSelect extends TableFilterBase
             ];
     }
     
-    protected function addWhere(Query|QueryBuilder|QueryBuilderToSqlAdapter $query, string $condition, string $value)
+    protected function addWhere(Query|QueryBuilder|QueryBuilderToSqlAdapter $query, string $condition, string $value, string|null $value_2)
     {
         switch ($condition) {
             case 'equal': 

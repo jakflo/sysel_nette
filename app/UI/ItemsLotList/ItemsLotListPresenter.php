@@ -71,7 +71,7 @@ class ItemsLotListPresenter extends \Nette\Application\UI\Presenter
     
     public function itemsLotListFilters(Form $form, $data)
     {
-        
+        $this->getFilters()->addItemFormOnSubmit($form, $data);
     }
     
     public function doRenameItemLot(Form $form, $data)

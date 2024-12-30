@@ -24,6 +24,7 @@
         <th>
             {var $cond_name = $filter['name'] . '_cond'}
             {var $value_name = $filter['name'] . '_value'}
+            <p class=error n:ifcontent>{inputError $cond_name}</p>
             <label n:name="$cond_name" />
             <select n:name="$cond_name" />
             <input n:name="$value_name" />
@@ -38,9 +39,22 @@
         <th>
             {var $cond_name = $filter['name'] . '_cond'}
             {var $value_name = $filter['name'] . '_value'}
+            <p class=error n:ifcontent>{inputError $cond_name}</p>
             <label n:name="$cond_name" />
             <select n:name="$cond_name" />
             <select n:name="$value_name" />
+            {include sortable_buttons, $filter}
+        </th>
+    {elseif ($filter['type'] == 'date')}
+        {var $cond_name = $filter['name'] . '_cond'}
+        {var $value_name = $filter['name'] . '_value'}
+        {var $value_name_2 = $filter['name'] . '_value_2'}
+        <th class="date_filter">
+            <p class=error n:ifcontent>{inputError $cond_name}</p>
+            <label n:name="$cond_name" />            
+            <select n:name="$cond_name" data-value2-name="{$value_name_2}" />
+            <input n:name="$value_name" />
+            <input class="date_filter_value_2" n:name="$value_name_2" />
             {include sortable_buttons, $filter}
         </th>
     {else}
