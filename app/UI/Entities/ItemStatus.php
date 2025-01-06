@@ -19,4 +19,31 @@ class ItemStatus
     #[ORM\Column(type: Types::STRING)]
     protected string $name;
     
+    public function getId(): int
+    {
+        return $this->id;
+    }
+    
+    public function getShortName(): string
+    {
+        return $this->short_name;
+    }
+    
+    public function getName(): string
+    {
+        return $this->name;
+    }
+    
+    public function setShortName(string $short_name)
+    {
+        $this->short_name = $short_name;
+        return $this;
+    }
+    
+    public function setName(string $name)
+    {
+        $this->name = $name;
+        return $this;
+    }
+    
 }

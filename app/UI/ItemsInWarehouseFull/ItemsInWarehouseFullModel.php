@@ -19,7 +19,7 @@ class ItemsInWarehouseFullModel
         $filters = $this->items_in_warehouse_full_filters_factory->create();
         
         $list = $this->em->createQueryBuilder()
-                ->select("wi.id, w.id AS warehouse_id, w.name AS warehouse, it.name AS item, wi.added, its.name AS status")
+                ->select("wi.id, w.id AS warehouse_id, w.name AS warehouse, it.name AS item, il.lot AS item_lot, wi.added, its.name AS status, wi.order_id")
                 ->from("App\\UI\\Entities\\WarehouseHasItem", 'wi')
                 ->join('wi.warehouse', 'w')                
                 ->join('wi.item_with_lot', 'il')

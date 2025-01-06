@@ -1,4 +1,55 @@
 {block content}
-<h1>Objednávky</h1>
+<h1>Seznam objednávek</h1>
 
+<form n:name="itemsListFilters">
+    <table class="w3_table">
+        <tr>
+            {include filters from '../filters_for_table.latte', filters:$fullListFilters}
+            <th>
+                <input n:name="filter" />
+                <a n:href="Orders:default"><button type="button">Reset</button></a>
+            </th>
+        </tr>
+        {foreach $fullList as $item}
+            <tr>
+                <td>{$item['id']}</td>
+                <td>{$item['added']->format('d. m. Y H:i:s')}</td>
+                <td>{$item['last_edited'] ? $item['last_edited']->format('d. m. Y H:i:s') : '–' }</td>
+                <td>{$item['note']}</td>
+                <td>{$item['forname']} {$item['surname']}</td>
+                <td>
+                    {$item['status']}
+                    <a n:if="$item['status_shortname'] == 'new'" n:href="OrderDetail:assignItems $item['id']">
+                        <span> </span>
+                        <button type="button">Přidělit položky</button>
+                    </a>
+                </td>
+                <td>
+                    <a n:href="OrderDetail:default $item['id']"><button type="button">Detail</button></a>
+                    <a n:href="ItemsInWarehouseFull:default, 
+                                warehouse_id_cond: equal,                                  
+                                item_name_cond: equal, 
+                                item_lot_name_cond: equal, 
+                                added_date_cond: equal, 
+                                status_name_cond: equal, 
+                                order_id_cond: equal, 
+                                order_id_value: $item['id'], 
+                                filter: Filtrovat, 
+                                do: itemsListFilters-submit">
+                        <button type="button">Seznam položek</button>
+                    </a>
+                </td>
+            </tr>
+        {/foreach}
+    </table>
+</form>
+        
+{include paginator from '../filters_for_table.latte', paginator:$paginator}
+
+<br/>
+<a n:href="Home:default"><button type="button">Domů</button></a>
+{/block}
+
+{block moreScripts}
+    <script src="{$basePath}/js/orders.js"></script>
 {/block}

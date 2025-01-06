@@ -36,7 +36,7 @@ p.error, ul.error li {
     font-weight: bold;
 }
 
-p.message {
+p.message, span.message {
     color: blue;
 }
 

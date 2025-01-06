@@ -19,8 +19,10 @@
                 <td>{$item['id']}</td>
                 <td>{$item['warehouse']}</td>
                 <td>{$item['item']}</td>
+                <td>{$item['item_lot']}</td>
                 <td>{$item['added']->format('d. m. Y')}</td>
                 <td>{$item['status']}</td>
+                <td><a n:if="$item['order_id'] !== null" n:href="OrderDetail:default $item['order_id']">{$item['order_id']}</a></td>
                 <td></td>
             </tr>
         {/foreach}

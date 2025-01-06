@@ -1,3 +1,49 @@
+{define foundItems $items_requested, $items_query}
+<h3>Nalezené položky</h3>
+<table class="w3_table" id="found_items">
+    <tr>
+        <td></td>
+        {foreach $items_query->getWarehouseNames() as $warehouse}
+            <th>{$warehouse}</th>
+        {/foreach}
+    </tr>
+    {foreach $items_requested as $item_requested}
+        <tr>
+            <th>{$items_query->getItemNames()[$item_requested['item_id']]}</th>
+            {var $item_amount_requested = $item_requested['item_amount']}
+            {foreach $items_query->getWarehouseNames() as $warehouse_id => $warehouse_name}
+                {var $item_amount_in_warehouse = $items_query->getItemAmount($item_requested['item_id'], $warehouse_id)}
+                {var $cell_color = ($item_amount_requested > $item_amount_in_warehouse) ? 'red' : 'green'}
+                <td class={$cell_color}>{$item_amount_in_warehouse} / {$item_amount_requested}</td>
+            {/foreach}
+        </tr>
+    {/foreach}        
+</table>
+{/define}
+
+{define missingItems $items_query}
+<h3>Chybějící položky</h3>
+<table class="simple_borderless" id="missing_items">
+    {foreach $items_query->getItemsNotFound() as $missing_item}
+        <tr>
+            <th>{$items_query->getItemNames()[$missing_item['item_id']]}</th>
+            <td>{$missing_item['item_amount']}</td>
+        </tr>
+    {/foreach}
+</table>
+{/define}
+
+{define warehousesWithAllItems $items_query}
+{if (count($items_query->getWarehousesWithAllItems()) > 0)}
+    <h3>Sklady, kde jsou všechny položky v žádaném množství:</h3>
+    <ul id="warehouses_with_all_items">
+        {foreach $items_query->getWarehousesWithAllItems() as $warehouses_with_all_items}
+            <li>{$warehouses_with_all_items}</li>
+        {/foreach}
+    </ul>
+{/if}
+{/define}
+
 {block content}
 <h1>Hledat položky</h1>
 
@@ -5,26 +51,7 @@
 <div id="search_react"></div>
 
 {if ($items_requested)}
-    <h3>Nalezené položky</h3>
-    <table class="w3_table" id="found_items">
-        <tr>
-            <td></td>
-            {foreach $items_query->getWarehouseNames() as $warehouse}
-                <th>{$warehouse}</th>
-            {/foreach}
-        </tr>
-        {foreach $items_requested as $item_requested}
-            <tr>
-                <th>{$items_query->getItemNames()[$item_requested['item_id']]}</th>
-                {var $item_amount_requested = $item_requested['item_amount']}
-                {foreach $items_query->getWarehouseNames() as $warehouse_id => $warehouse_name}
-                    {var $item_amount_in_warehouse = $items_query->getItemAmount($item_requested['item_id'], $warehouse_id)}
-                    {var $cell_color = ($item_amount_requested > $item_amount_in_warehouse) ? 'red' : 'green'}
-                    <td class={$cell_color}>{$item_amount_in_warehouse} / {$item_amount_requested}</td>
-                {/foreach}
-            </tr>
-        {/foreach}        
-    </table>
+    {include foundItems, $items_requested, $items_query}
         
     {if (count($items_query->getWarehousesWithAllItems()) > 0)}
     {else}
@@ -32,24 +59,9 @@
     {/if}
     
     {if (count($items_query->getItemsNotFound()) > 0)}
-        <h3>Chybějící položky</h3>
-        <table class="simple_borderless" id="missing_items">
-            {foreach $items_query->getItemsNotFound() as $missing_item}
-                <tr>
-                    <th>{$items_query->getItemNames()[$missing_item['item_id']]}</th>
-                    <td>{$missing_item['item_amount']}</td>
-                </tr>
-            {/foreach}
-        </table>
+        {include missingItems, $items_query}
     {/if}
-    {if (count($items_query->getWarehousesWithAllItems()) > 0)}
-        <h3>Sklady, kde jsou všechny položky v žádaném množství:</h3>
-        <ul id="warehouses_with_all_items">
-            {foreach $items_query->getWarehousesWithAllItems() as $warehouses_with_all_items}
-                <li>{$warehouses_with_all_items}</li>
-            {/foreach}
-        </ul>
-    {/if}
+    {include warehousesWithAllItems, $items_query}
 {/if}
 
 <br />

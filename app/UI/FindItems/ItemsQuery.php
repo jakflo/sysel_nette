@@ -8,6 +8,7 @@ class ItemsQuery
     protected array $warehouse_names;
     protected array $item_names;
     protected array $warehouses_with_all_items;
+    protected array $warehouses_with_some_item;
     protected array $list_by_items;
     protected array $items_not_found;
 
@@ -37,6 +38,7 @@ class ItemsQuery
         $this->list_by_items = ArrayTools::groupMultiArray($list, 'item_id');
         $this->item_names = ArrayTools::multiarrayToAsocPairs($list, 'item_id', 'item');
         $this->setWarehousesWithAllItems();
+        $this->setWarehousesWithSomeItem();
     }
     
     protected function setWarehousesWithAllItems()
@@ -48,11 +50,28 @@ class ItemsQuery
                 $this->substractItemsAmountFromNotFound($item['item_id'], $item_amount);
                 if ($item_amount < $item['item_amount']) {
                     unset($all_warehouses[$warehouse_id]);
-//                    break;
                 }
             }
         }
         $this->warehouses_with_all_items = $all_warehouses;
+    }
+    
+    protected function setWarehousesWithSomeItem()
+    {
+        $all_warehouses = $this->warehouse_names;
+        foreach ($all_warehouses as $warehouse_id => $warehouse_name) {
+            $warehouses_has_some_item = false;
+            foreach ($this->items_list as $item) {
+                if ($this->getItemAmount($item['item_id'], $warehouse_id) > 0) {
+                    $warehouses_has_some_item = true;
+                    break;
+                }
+            }
+            if (!$warehouses_has_some_item) {
+                unset($all_warehouses[$warehouse_id]);
+            }
+        }
+        $this->warehouses_with_some_item = $all_warehouses;
     }
     
     protected function setWarehouseNames() 
@@ -96,6 +115,11 @@ class ItemsQuery
     public function getWarehousesWithAllItems(): array
     {
         return $this->warehouses_with_all_items;
+    }
+    
+    public function getWarehousesWithSomeItem(): array
+    {
+        return $this->warehouses_with_some_item;
     }
     
     public function getItemsNotFound(): array

@@ -20,6 +20,9 @@ class Address
     protected string $city;
     
     #[ORM\Column(type: Types::STRING)]
+    protected string $zip;
+    
+    #[ORM\Column(type: Types::STRING)]
     protected string $country;
     
     
@@ -43,6 +46,11 @@ class Address
         return $this->country;
     }
     
+    public function getZip(): string
+    {
+        return $this->zip;
+    }
+    
     public function setId(int $id)
     {
         $this->id = $id;
@@ -64,6 +72,12 @@ class Address
     public function setCountry(string $country)
     {
         $this->country = $country;
+        return $this;
+    }
+    
+    public function setZip(string $zip)
+    {
+        $this->zip = $zip;
         return $this;
     }
     

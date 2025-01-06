@@ -8,4 +8,5 @@ class NotFoundException extends \Exception
     const MANUFACTURER = 3;
     const ITEMWITHLOT = 4;
     const ADDRESS = 5;
+    const ORDER = 6;
 }

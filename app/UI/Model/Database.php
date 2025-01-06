@@ -33,7 +33,7 @@ class Database
     }
     
     /**     
-     * @return array ArrayHash objektu
+     * @return array ArrayHash objekt
      */
     public function fetchAllObjects(string $query, array $params = [], array $types = []): array
     {
@@ -74,6 +74,15 @@ class Database
         }
         
         return ArrayTools::multiarrayToAsocPairs($rows, $keys[0], $keys[1]);
+    }
+    
+    public function executeQuery(
+        string $sql,
+        array $params = [],
+        $types = [],
+        ?QueryCacheProfile $qcp = null
+    ): Result {
+        return $this->db->executeQuery($sql, $params, $types, $qcp);
     }
     
     public function beginTransaction()

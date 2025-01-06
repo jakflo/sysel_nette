@@ -25,8 +25,10 @@ class ItemsInWarehouseFullFilters extends TableFilterCollection
                 ->addFilter(new TableFilterSortOnly('id', '#', 'wi.id'))
                 ->addFilter((new TableFilterSelect('warehouse_id', 'Sklad', 'w.id', $warehouses, true))->setForcedOrderByTableDotColumnName('w.name'))
                 ->addFilter(new TableFilterText('item_name', 'Položka', 'it.name', true))
+                ->addFilter(new TableFilterText('item_lot_name', 'Šarže položky', 'il.lot', true))
                 ->addFilter(new TableFilterDate('added_date', 'Přidáno', 'wi.added', true))
                 ->addFilter(new TableFilterSelect('status_name', 'Stav', 'its.id', $statuses, false))
+                ->addFilter(new TableFilterText('order_id', 'Č. objednávky', 'wi.order_id', true))
                 ;
     }
 }

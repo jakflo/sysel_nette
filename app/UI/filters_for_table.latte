@@ -18,7 +18,7 @@
 {/define}
 
 {* predavane promenne: filters(2D array obsahujici type(string), name(string), sortable(bool)) *}
-{block filters}
+{define filters $filters}
 {foreach $filters as $filter}
     {if ($filter['type'] == 'input')}
         <th>
@@ -61,10 +61,10 @@
         <th><b>Neznámý typ filtru</b></th>
     {/if}
 {/foreach}
-{/block}
+{/define}
 
 {* predavane promenne: paginator(App\UI\Model\Paginator) *}
-{block paginator}
+{define paginator $paginator}
 {var $url_object = $presenter->getHttpRequest()->getUrl()}
 {var $current_page = $paginator->getCurrentPage()}
 {var $max_page = $paginator->getPagesCount()}
@@ -105,4 +105,4 @@
 {/if}
 
 </div>
-{/block}
+{/define}

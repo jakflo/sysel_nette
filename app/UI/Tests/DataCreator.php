@@ -43,7 +43,7 @@ class DataCreator
     
     public function createAddress(): int
     {
-        return $this->address_model_factory->create()->create('street_dsjhkdhcccwijd', 'city_cccejfjnas', 'country_lwkdasjdahsd');
+        return $this->address_model_factory->create()->create('street_dsjhkdhcccwijd', 'city_cccejfjnas', 'country_lwkdasjdahsd', 'zip_lwkdas');
     }
     
     public function createManufacturer(): int

@@ -13,13 +13,14 @@ class AddressModel
         
     }
     
-    public function create(string $street, string $city, string $country): int
+    public function create(string $street, string $city, string $country, string $zip): int
     {
         $address = new Address();
         $address
                 ->setStreet($street)
                 ->setCity($city)
                 ->setCountry($country)
+                ->setZip($zip)
                 ;
         $this->em->persist($address);
         $this->em->flush();

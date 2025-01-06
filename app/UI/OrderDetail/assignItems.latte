@@ -1,0 +1,28 @@
+{block content}
+<h1>Přiřazení položek k objednávce {$order_detail['id']}</h1>
+
+{if (count($items_query->getItemsNotFound()) > 0)}
+    <p class="red">Objednávku nelze zkompletovat, na skladech není dostatek položek</p>
+{else}
+    <p>Po přiřazení položek k objednávce bude stav objednávky změněn na Připraveno k odeslání</p>
+{/if}
+
+{include foundItems from '../FindItems/default.latte', $items_requested, $items_query}
+{include warehousesWithAllItems from '../FindItems/default.latte', $items_query}
+
+{if (count($items_query->getItemsNotFound()) > 0)}
+    {include missingItems from '../FindItems/default.latte', $items_query}
+{else}
+    <span>Vyberte sklady, které mají být přednostně použity ke kompletaci objednávky. Neobsahují-li vybrané sklady dostatek položek, zbylé položky budou rezervovány z jiných skladů.</span>
+    <br /><span>Nebude-li vybrán žádný sklad, budou postupně použity všechny sklady dle data jejich vytvoření</span>
+    {control choosePreferedWarehouses}
+{/if}
+
+<br/>
+<a n:href="Orders:default"><button type="button">Zpět</button></a>
+<a n:href="Home:default"><button type="button">Domů</button></a>
+{/block}
+
+{block moreScripts}
+    <script src="{$basePath}/js/order_detail.js"></script>
+{/block}

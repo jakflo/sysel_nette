@@ -1,0 +1,82 @@
+{block content}
+<h1>Detail objednávky {$order_detail['id']}</h1>
+
+<h2>Základní informace</h2>
+<form n:name="changeOrderStatus">
+    <table class="simple_borderless" id="order_basic_info">
+        <tr>
+            <th>Č. objednávky</th>
+            <td>{$order_detail['id']}</td>
+        </tr>
+        <tr>
+            <th>Přidáno</th>
+            <td>{$order_detail['added']->format('d. m. Y H:i:s')}</td>
+        </tr>
+        <tr>
+            <th>Změněno</th>
+            <td>{$order_detail['last_edited'] ? $order_detail['last_edited']->format('d. m. Y H:i:s') : 'Nezměněno' }</td>
+        </tr>
+        <tr>
+            <th>Poznámka</th>
+            <td>{$order_detail['note']}</td>
+        </tr>
+        <tr>
+            <th>Stav</th>
+            <td>
+                <select n:name="new_status" />
+                <input n:name="order_id" />
+                <input n:name="current_state" />
+                <input n:name="sent" disabled />
+                <button type="button" id="cancel_button">Zrušit</button>
+            </td>
+        </tr>
+    </table>
+</form>
+        
+<div id="change_status_hints">
+    <span class="message hidden change-new-to-items_reserved">Před změnou stavu objednávky na Připravena k odeslání je nutno přidělit položky k objednávce. Budete přesměrováni.</span>
+    <span class="message hidden change-items_reserved-to-new change-items_reserved-to-storno">Změnou stavu dojde k uvolnění rezervovaných položek.</span>
+</div>
+    
+<h2>Informace o klientovy</h2>
+<table class="simple_borderless" id="client_info">
+    <tr>
+        <th>Jméno</th>
+        <td>{$client_info['fullname']}</td>
+    </tr>
+    <tr>
+        <th>Adresa</th>
+        <td>{$client_info['street']}, {$client_info['city']} {$client_info['zip']}, {$client_info['country']}</td>
+    </tr>
+    <tr>
+        <th>Email</th>
+        <td>{$client_info['email']}</td>
+    </tr>
+    <tr>
+        <th>Telefon</th>
+        <td>{$client_info['phone']}</td>
+    </tr>
+</table>
+    
+<h2>Položky v objednávce</h2>
+<table class="w3_table" id="items_in_order">
+    <tr>
+        <th>Jméno položky</th>
+        <th>Množství</th>
+    </tr>
+    {foreach $items as $item}
+        <tr>
+            <td>{$item['item_name']}</td>
+            <td>{$item['item_amount']}</td>
+        </tr>
+    {/foreach}
+</table>
+
+<br/>
+<a n:href="Orders:default"><button type="button">Zpět</button></a>
+<a n:if="$order_detail['status_shortname'] == 'new'" n:href="OrderDetail:assignItems $order_detail['id']"><button type="button">Přidělit položky</button></a>
+<a n:href="Home:default"><button type="button">Domů</button></a>
+
+{block moreScripts}
+    <script src="{$basePath}/js/order_detail.js"></script>
+{/block}
