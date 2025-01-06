@@ -45,16 +45,19 @@
             <select n:name="$value_name" />
             {include sortable_buttons, $filter}
         </th>
-    {elseif ($filter['type'] == 'date')}
+    {elseif ($filter['type'] == 'date' || $filter['type'] == 'number')}
         {var $cond_name = $filter['name'] . '_cond'}
         {var $value_name = $filter['name'] . '_value'}
         {var $value_name_2 = $filter['name'] . '_value_2'}
-        <th class="date_filter">
+        
+        {var $th_class = $filter['type'] . '_filter'}
+        {var $value_2_class = $th_class . '_value_2'}
+        <th class="{$th_class}">
             <p class=error n:ifcontent>{inputError $cond_name}</p>
             <label n:name="$cond_name" />            
             <select n:name="$cond_name" data-value2-name="{$value_name_2}" />
             <input n:name="$value_name" />
-            <input class="date_filter_value_2" n:name="$value_name_2" />
+            <input class="{$value_2_class}" n:name="$value_name_2" />
             {include sortable_buttons, $filter}
         </th>
     {else}

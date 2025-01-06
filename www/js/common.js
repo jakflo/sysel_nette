@@ -15,7 +15,7 @@ class CommonDom {
 }
 
 class CommonForms {
-    setDateFilters = () => {
+    setBetweenFilters = () => {
         var conditionChanged = (conditionSelectDom) => {
             var value_2_name = $(conditionSelectDom).attr('data-value2-name');
             var value_2_input = $("input[name='" + value_2_name + "']");
@@ -27,7 +27,7 @@ class CommonForms {
             }
         };
         
-        $('.date_filter').each((key, date_item) => {
+        $('.date_filter, .number_filter').each((key, date_item) => {
             $(date_item).find('select').change(function() {
                 conditionChanged($(this));
             });

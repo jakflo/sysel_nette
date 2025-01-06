@@ -22,6 +22,7 @@ class ItemsInWarehouseFullPresenter extends \Nette\Application\UI\Presenter
         $this->template->fullList = $pages->getRows();
         $this->template->fullListFilters = $filters;
         $this->template->paginator = $pages;
+        $this->template->title = 'Syslovo sklad | Položky ve skladě';
     }
     
     protected function createComponentItemsListFilters(): Form {

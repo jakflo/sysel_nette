@@ -24,7 +24,7 @@ abstract class TableFilterBase
         $order_by = $request->getQuery('sort_by');
         $order_direction = $request->getQuery('sort_desc') == 1 ? 'DESC' : 'ASC';
         
-        if ($value) {
+        if ($value || $condition === 'is_empty' || $condition === 'not_empty') {
             $this->addWhere($query, $condition, $value, $value_2);
         }
         if ($this->sortable && $order_by) {

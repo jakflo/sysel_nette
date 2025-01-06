@@ -6,6 +6,7 @@ use \App\UI\TableFilters\TableFilterText;
 use \App\UI\TableFilters\TableFilterSortOnly;
 use \App\UI\TableFilters\TableFilterSelect;
 use \App\UI\TableFilters\TableFilterDate;
+use \App\UI\TableFilters\TableFilterNumber;
 
 class ItemsInWarehouseFullFilters extends TableFilterCollection
 {
@@ -28,7 +29,10 @@ class ItemsInWarehouseFullFilters extends TableFilterCollection
                 ->addFilter(new TableFilterText('item_lot_name', 'Šarže položky', 'il.lot', true))
                 ->addFilter(new TableFilterDate('added_date', 'Přidáno', 'wi.added', true))
                 ->addFilter(new TableFilterSelect('status_name', 'Stav', 'its.id', $statuses, false))
-                ->addFilter(new TableFilterText('order_id', 'Č. objednávky', 'wi.order_id', true))
-                ;
+                ->addFilter((new TableFilterNumber('order_id', 'Č. objednávky', 'wi.order_id', true))
+                        ->setCanBeNull(true)
+                        ->setIsInteger(true)
+                        ->setMin(1)
+                        );
     }
 }

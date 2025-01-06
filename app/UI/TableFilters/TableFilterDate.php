@@ -8,6 +8,8 @@ use \App\UI\TableFilters\QueryBuilderToSqlAdapter;
 
 class TableFilterDate extends TableFilterBase
 {
+    use \App\UI\TableFilters\BetweenValuesTrait;
+    
     public function __construct(
             protected string $name, 
             protected string $label, 
@@ -57,7 +59,7 @@ class TableFilterDate extends TableFilterBase
             case 'equal': 
                 $start_date = $value . ' 00:00:00';
                 $end_date = $value . ' 23:59:59';
-                $this->addWhereBetweenDates($query, $start_date, $end_date);
+                $this->addWhereBetweenValues($query, $start_date, $end_date);
                 break;
             case 'less_than':
                 $end_date = $value . ' 00:00:00';
@@ -75,7 +77,7 @@ class TableFilterDate extends TableFilterBase
                 if (!empty($value_2)) {
                     $start_date = $value . ' 00:00:00';
                     $end_date = $value_2 . ' 23:59:59';
-                    $this->addWhereBetweenDates($query, $start_date, $end_date);
+                    $this->addWhereBetweenValues($query, $start_date, $end_date);
                 }
                 break;
             default :
@@ -83,23 +85,6 @@ class TableFilterDate extends TableFilterBase
         }
     }
     
-    protected function addWhereBetweenDates(Query|QueryBuilder|QueryBuilderToSqlAdapter $query, string $start_date, string $end_date)
-    {
-        $query->andWhere("{$this->tableDotColumnName} >= :val_{$this->printHashedName($this->name. '_1')}")
-                ->setParameter('val_' . $this->printHashedName($this->name. '_1'), $start_date)
-                ->andWhere("{$this->tableDotColumnName} <= :val_{$this->printHashedName($this->name. '_2')}")
-                ->setParameter('val_' . $this->printHashedName($this->name. '_2'), $end_date)
-                ;
-    }
     
-    public function addItemFormOnSubmit(Form $form, $data)
-    {
-        if ($data[$this->name . '_cond'] == 'between' && empty($data[$this->name . '_value_2'])) {
-            $form[$this->name . '_cond']->addError('U filtru typu mezi nemůže být datum do prázdné');
-        }
-        else if ($data[$this->name . '_cond'] == 'between' && $data[$this->name . '_value'] > $data[$this->name . '_value_2']) {
-            $form[$this->name . '_cond']->addError('U filtru typu mezi nemůže být datum do menší než datum od');
-        }
-    }
     
 }

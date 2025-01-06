@@ -1,4 +1,4 @@
 $(function(){
     var forms = new CommonForms();
-    forms.setDateFilters();
+    forms.setBetweenFilters();
 });
