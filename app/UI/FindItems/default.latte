@@ -1,3 +1,6 @@
+{* predavane promenne: items_requested(2D array obsahujici item_id(int), item_amount(int)), 
+                        items_query(\App\UI\FindItems\ItemsQuery)
+*}
 {define foundItems $items_requested, $items_query}
 <h3>Nalezené položky</h3>
 <table class="w3_table" id="found_items">
@@ -21,6 +24,7 @@
 </table>
 {/define}
 
+{* predavane promenne: items_query(\App\UI\FindItems\ItemsQuery)*}
 {define missingItems $items_query}
 <h3>Chybějící položky</h3>
 <table class="simple_borderless" id="missing_items">
