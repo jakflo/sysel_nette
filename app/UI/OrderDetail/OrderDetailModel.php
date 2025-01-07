@@ -7,6 +7,7 @@ use \App\UI\OrderDetail\OrderDetailException;
 use \Doctrine\DBAL\Types\Type;
 use \App\UI\Entities\OrderStatus;
 use \App\UI\Entities\Orders;
+use \Doctrine\ORM\Query;
 
 class OrderDetailModel
 {
@@ -146,6 +147,12 @@ class OrderDetailModel
                 );
     }
     
+    /**
+     * prideli polozky objednavce se stavem Nova. Jejdrive bude brat polozky ze skladu vybranych v $prefered_warehouses_id, 
+     * pak ze skladu dle jejich zaplnenosti. Pote zmeni stav objednavky na Pripraveno k odeslani 
+     * @param array $prefered_warehouses_id
+     * @throws OrderDetailException
+     */
     public function assignItemsToOrder(array $prefered_warehouses_id)
     {
         $order_detail = $this->getOrderDetails();
@@ -217,9 +224,22 @@ class OrderDetailModel
     
     public function changeOrderStatus(string $order_status_short_name)
     {
+        $items_in_warehouse_model = $this->items_in_warehouse_model_factory->create();
+        $order_detail = $this->getOrderDetails();
         $order_status = $this->em->getRepository(OrderStatus::class)->findOneBy(['short_name' => $order_status_short_name]);
+        
+        $warehouse_has_item_id_in_order = $this->em
+                ->createQuery("SELECT iw.id FROM App\\UI\Entities\\WarehouseHasItem iw WHERE iw.order_id = :oid")
+                ->setParameter('oid', $this->order_id)
+                ->getResult(Query::HYDRATE_SCALAR_COLUMN)
+                ;
+      
         if (!$order_status) {
             throw new OrderDetailException('Neznamy stav objednavky');
+        }
+        
+        if (!in_array($order_status_short_name, $this->getAllowedStatusChanges($order_status_short_name))) {
+            throw new OrderDetailException('Nepovoleny typ zmeny stavu objednavky', OrderDetailException::INVALIDSTATUSCHANGE);
         }
         
         $order = $this->em->getRepository(Orders::class)->findOneById($this->order_id);
@@ -229,6 +249,22 @@ class OrderDetailModel
         
         $order->setStatus($order_status);
         $this->em->flush();
+        
+        //nakonec zmenime stav polozek v objednavce
+        if (
+                $order_detail['status_shortname'] === 'items_reserved' && 
+                ($order_status_short_name === 'new' || $order_status_short_name === 'storno')                
+                ) {
+            $items_in_warehouse_model->changeItemsStatuses('available', null, $warehouse_has_item_id_in_order);
+        } elseif ($order_status_short_name === 'items_reserved' && $order_detail['status_shortname'] === 'sent_off') {
+            $items_in_warehouse_model->changeItemsStatuses('reserved', $this->order_id, $warehouse_has_item_id_in_order);
+        } elseif ($order_status_short_name === 'sent_off') {
+            $items_in_warehouse_model->changeItemsStatuses('sent_off', $this->order_id, $warehouse_has_item_id_in_order);
+        } elseif ($order_status_short_name === 'items_returned') {
+            $items_in_warehouse_model->changeItemsStatuses('returned', $this->order_id, $warehouse_has_item_id_in_order);
+        } elseif ($order_status_short_name === 'complain_in_progress' && $order_detail['status_shortname'] === 'items_returned') {
+            $items_in_warehouse_model->changeItemsStatuses('sent_off', $this->order_id, $warehouse_has_item_id_in_order);
+        }
     }
     
 }

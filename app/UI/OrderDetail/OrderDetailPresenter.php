@@ -79,18 +79,26 @@ class OrderDetailPresenter extends \Nette\Application\UI\Presenter
     {
         $order_detail = $this->getOrderDetails();
         $current_state = $order_detail['status_shortname'];
-        $allowed_states = $this->getOrderDetailModel()->getAllowedStatusChanges($current_state);
         
         if ($current_state != $data['current_state']) {
             $this->flashMessage('Před odesláním formuláře došlo ke změně stavu objednávky.', 'error');
             $this->redirect('OrderDetail:default', ['id' => $this->getId()]);
         }
-        if (!in_array($data['new_status'], $allowed_states)) {
-            $this->flashMessage('Chyba! Nepovolená změna stavu objednávky.', 'error');
-            $this->redirect('OrderDetail:default', ['id' => $this->getId()]);
-        }
         if ($current_state == 'new' && $data['new_status'] == 'items_reserved') {
             $this->redirect('OrderDetail:assignItems', ['id' => $this->getId()]);
+        }
+        
+        try {
+            $this->getOrderDetailModel()->changeOrderStatus($data['new_status']);
+            $this->flashMessage('Stav objednávky byl změněn.', 'success');
+            $this->redirect('OrderDetail:default', ['id' => $this->getId()]);
+        } catch (OrderDetailException $e) {
+            if ($e->getCode() === OrderDetailException::INVALIDSTATUSCHANGE) {
+                $this->flashMessage('Chyba! Nepovolená změna stavu objednávky.', 'error');
+                $this->redirect('OrderDetail:default', ['id' => $this->getId()]);
+            } else {
+                throw $e;
+            }
         }
     }
     
@@ -99,7 +107,7 @@ class OrderDetailPresenter extends \Nette\Application\UI\Presenter
         try {
             $this->getOrderDetailModel()->assignItemsToOrder($data['prefered_warehouses']);
             $this->flashMessage('Položky byly přiřazeny, stav objednávky byl změněn na Rezervováno.', 'success');
-            $this->redirect('Orders:default');
+            $this->redirect('OrderDetail:default', ['id' => $this->getId()]);
         } catch (OrderDetailException $e) {
             if ($e->getCode() === OrderDetailException::ORDERISNOTNEW) {
                 $this->flashMessage('Chyba! Stav objednávky již byl změněn, není ve stavu Nová.', 'error');
