@@ -17,6 +17,7 @@ class OrderDetailModel
             protected \App\UI\FindItems\ItemsQueryFactory $items_query_factory, 
             protected \App\UI\FindItems\FindItemsModelFactory $find_items_model_factory, 
             protected \App\UI\ItemsInWarehouse\ItemsInWarehouseModelFactory $items_in_warehouse_model_factory, 
+            protected \App\UI\Orders\OrdersModelFactory $orders_model_factory, 
             protected int $order_id
     )
     {
@@ -242,12 +243,10 @@ class OrderDetailModel
             throw new OrderDetailException('Nepovoleny typ zmeny stavu objednavky', OrderDetailException::INVALIDSTATUSCHANGE);
         }
         
-        $order = $this->em->getRepository(Orders::class)->findOneById($this->order_id);
-        if (!$order) {
-            throw new NotFoundException('Objednavka nenalezena', NotFoundException::ORDER);
-        }
-        
-        $order->setStatus($order_status);
+        $order = $this->orders_model_factory->create()->getOrder($this->order_id);
+        $order->setStatus($order_status)
+                ->setLastEdited(new \DateTime())
+                ;
         $this->em->flush();
         
         //nakonec zmenime stav polozek v objednavce
