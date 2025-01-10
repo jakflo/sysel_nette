@@ -154,7 +154,7 @@ class OrderDetailModel
      * @param array $prefered_warehouses_id
      * @throws OrderDetailException
      */
-    public function assignItemsToOrder(array $prefered_warehouses_id)
+    public function assignItemsToOrder(array $prefered_warehouses_id = [])
     {
         $order_detail = $this->getOrderDetails();
         if ($order_detail['status_shortname'] !== 'new') {
@@ -166,11 +166,17 @@ class OrderDetailModel
             throw new OrderDetailException('Vsechny polozky objednavky nebyly nalezeny', OrderDetailException::NOTALLITEMSFOUND);
         }
         
-        $find_items_model = $this->find_items_model_factory->create();
-        $find_items_model->checkWarehousesExist($prefered_warehouses_id);
-        
-        $prefered_warehouses_term = new ProtectedIn();
-        $prefered_warehouses_term->addArray('wid', $prefered_warehouses_id);
+        if (count($prefered_warehouses_id) > 0) {
+            $find_items_model = $this->find_items_model_factory->create();
+            $find_items_model->checkWarehousesExist($prefered_warehouses_id);
+            $prefered_warehouses_in = new ProtectedIn();
+            $prefered_warehouses_in->addArray('wid', $prefered_warehouses_id);
+            $prefered_warehouses_term = "AND id IN ({$prefered_warehouses_in->getTokens('wid')})";
+            $prefered_warehouses_params = $prefered_warehouses_in->getData();
+        } else {
+            $prefered_warehouses_term = '';
+            $prefered_warehouses_params = [];
+        }
         
         $this->db->executeQuery(
                 "CREATE TEMPORARY TABLE wa AS 
@@ -197,7 +203,7 @@ class OrderDetailModel
                     JOIN item_status ist ON whi.status_id = ist.id 
                     JOIN warehouse w ON whi.warehouse_id = w.id 
                     LEFT JOIN (
-                        SELECT id FROM warehouse WHERE id IN ({$prefered_warehouses_term->getTokens('wid')})
+                        SELECT id FROM warehouse WHERE 1 {$prefered_warehouses_term}
                     ) AS ws ON whi.warehouse_id = ws.id 
                     JOIN 
                     (
@@ -212,7 +218,7 @@ class OrderDetailModel
                             'itid' => $order_item['item_id'], 
                             'am' => $order_item['item_amount']
                         ], 
-                        $prefered_warehouses_term->getData('wid')                                        
+                        $prefered_warehouses_params                                        
                     ), 
                     ['am' => Type::getType('integer')]
             );
@@ -251,6 +257,15 @@ class OrderDetailModel
         
         //nakonec zmenime stav polozek v objednavce
         if (
+                $order_status_short_name === 'items_reserved' && 
+                ($order_detail['status_shortname'] === 'new' || $order_detail['status_shortname'] === 'storno') && 
+                count($warehouse_has_item_id_in_order) === 0
+        ) {
+            throw new OrderDetailException(
+                'Pred zmenou stavu objednavky na Pripraveno k odelsani nutno pridelit polozky k objednavce', 
+                OrderDetailException::ORDERSITEMSMUSTBEASSIGNED
+            );
+        } elseif (
                 $order_detail['status_shortname'] === 'items_reserved' && 
                 ($order_status_short_name === 'new' || $order_status_short_name === 'storno')                
                 ) {
