@@ -12,10 +12,10 @@ Požadavky
 Instalace
 ------------
 
-Je doporučeno naistalovat Nette a Netrine pomocí Composer.
-Poté pomocí db_dump.sql vytvořte DB a v /config/database_connection.neon nakonfigurujte
+- Je doporučeno naistalovat Nette a Netrine pomocí Composer.
+- Poté pomocí db_dump.sql vytvořte DB a v /config/database_connection.neon nakonfigurujte
 
 Spuštení webu
 ----------------
-spuštění PHP: php -S localhost:8000 -t www
-Web je pak přístupný na: http://localhost:8000
+- spuštění PHP: php -S localhost:8000 -t www
+- web je pak přístupný na: http://localhost:8000
