@@ -10,6 +10,7 @@ class DataCreator
             protected \App\UI\ItemsList\ItemsModelFactory $items_model_factory, 
             protected \App\UI\AddressList\AddressModelFactory $address_model_factory, 
             protected \App\UI\ManufacturerList\ManufacturerModelFactory $manufacturer_model_factory, 
+            protected \App\UI\Client\ClientModelFactory $client_model_factory, 
             protected \App\UI\ItemsInWarehouse\ItemsInWarehouseModelFactory $items_in_warehouse_model_factory, 
             protected \Doctrine\ORM\EntityManager $em
     )
@@ -17,9 +18,9 @@ class DataCreator
         
     }
     
-    public function createWarehouse(string $name): int
+    public function createWarehouse(string $name, int $area = 100): int
     {
-        return $this->warehouse_model_factory->create()->create($name, 100);
+        return $this->warehouse_model_factory->create()->create($name, $area);
     }
     
     public function createItem(string $name):int
@@ -41,9 +42,9 @@ class DataCreator
         ];
     }
     
-    public function createAddress(): int
+    public function createAddress(string $name_postfix = 'dsjhkdhcccwijd'): int
     {
-        return $this->address_model_factory->create()->create('street_dsjhkdhcccwijd', 'city_cccejfjnas', 'country_lwkdasjdahsd', 'zip_lwkdas');
+        return $this->address_model_factory->create()->create("street_{$name_postfix}", "city_{$name_postfix}", "country_{$name_postfix}", 'ddssw');
     }
     
     public function createManufacturer(): int
@@ -51,10 +52,26 @@ class DataCreator
         return $this->manufacturer_model_factory->create()->create('name_jfkldsjafew', 'email_ddvcowehhv', 'phone_ppscjhebvcswe', $this->createAddress());
     }
     
+    public function createClient(string $name_postfix = 'dsjhkdhcccwijd'): int
+    {
+        $client = $this->client_model_factory->create()->create(
+            "fn_{$name_postfix}", 
+            "sn_{$name_postfix}", 
+            null, 
+            null, 
+            null, 
+            "em_{$name_postfix}", 
+            null, 
+            $this->createAddress("a_{$name_postfix}"), 
+            null
+        );
+        return $client->getId();
+    }
+    
     /**     
      * @return array taky, jak by to vratila ItemsInWarehouseModel::getList
      */
-    public function createTwoItemsInNewWarehouse(string $warehouse_name, string $item_name, bool $few_reserved_items): array
+    public function createTwoItemsInNewTwoWarehouses(string $warehouse_name, string $item_name, bool $few_reserved_items): array
     {
         $warehouse_name_1 = "{$warehouse_name}_1";
         $warehouse_name_2 = "{$warehouse_name}_2";

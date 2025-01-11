@@ -129,7 +129,6 @@ class OrderDetailModel
         }
         
         $allowed_status_changes_for_item = $allowed_status_changes[$status_shortname];
-        array_unshift($allowed_status_changes_for_item, $status_shortname);
         return $allowed_status_changes_for_item;
     }
     
@@ -138,6 +137,7 @@ class OrderDetailModel
         $order_details = $this->getOrderDetails();
         $current_status = $order_details['status_shortname'];
         $allowed_statuses_shortname = $this->getAllowedStatusChanges($current_status);
+        array_unshift($allowed_statuses_shortname, $order_details['status_shortname']);
         
         $statuses = new ProtectedIn();
         $statuses->addArray('sns', $allowed_statuses_shortname);
@@ -245,8 +245,19 @@ class OrderDetailModel
             throw new OrderDetailException('Neznamy stav objednavky');
         }
         
-        if (!in_array($order_status_short_name, $this->getAllowedStatusChanges($order_status_short_name))) {
+        if (!in_array($order_status_short_name, $this->getAllowedStatusChanges($order_detail['status_shortname']))) {
             throw new OrderDetailException('Nepovoleny typ zmeny stavu objednavky', OrderDetailException::INVALIDSTATUSCHANGE);
+        }
+        
+        if (
+                $order_status_short_name === 'items_reserved' && 
+                ($order_detail['status_shortname'] === 'new' || $order_detail['status_shortname'] === 'storno') && 
+                count($warehouse_has_item_id_in_order) === 0
+        ) {
+            throw new OrderDetailException(
+                'Pred zmenou stavu objednavky na Pripraveno k odelsani nutno pridelit polozky k objednavce', 
+                OrderDetailException::ORDERSITEMSMUSTBEASSIGNED
+            );
         }
         
         $order = $this->orders_model_factory->create()->getOrder($this->order_id);
@@ -257,15 +268,6 @@ class OrderDetailModel
         
         //nakonec zmenime stav polozek v objednavce
         if (
-                $order_status_short_name === 'items_reserved' && 
-                ($order_detail['status_shortname'] === 'new' || $order_detail['status_shortname'] === 'storno') && 
-                count($warehouse_has_item_id_in_order) === 0
-        ) {
-            throw new OrderDetailException(
-                'Pred zmenou stavu objednavky na Pripraveno k odelsani nutno pridelit polozky k objednavce', 
-                OrderDetailException::ORDERSITEMSMUSTBEASSIGNED
-            );
-        } elseif (
                 $order_detail['status_shortname'] === 'items_reserved' && 
                 ($order_status_short_name === 'new' || $order_status_short_name === 'storno')                
                 ) {
@@ -279,6 +281,11 @@ class OrderDetailModel
         } elseif ($order_status_short_name === 'complain_in_progress' && $order_detail['status_shortname'] === 'items_returned') {
             $items_in_warehouse_model->changeItemsStatuses('sent_off', $this->order_id, $warehouse_has_item_id_in_order);
         }
+    }
+    
+    public function getOrderId(): int
+    {
+        return $this->order_id;
     }
     
 }

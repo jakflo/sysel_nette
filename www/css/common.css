@@ -67,11 +67,6 @@ button.marked {
     background: linear-gradient(to bottom, #99ff66 0%, #009900 100%);
 }
 
-ul.bez_znacek {
-    list-style-type:none;
-    padding-left: 5px;
-}
-
 div.flash {
     font-size: 24px;
 }

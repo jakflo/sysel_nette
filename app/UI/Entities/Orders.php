@@ -25,7 +25,7 @@ class Orders
     protected \DateTime $last_edited;
     
     #[ORM\Column(type: Types::STRING)]
-    protected string $note;
+    protected string|null $note;
     
     #[ORM\Column(type: Types::INTEGER)]
     protected string $status_id;
@@ -58,7 +58,7 @@ class Orders
         return $this->last_edited;
     }
 
-    public function getNote(): string
+    public function getNote(): string|null
     {
         return $this->note;
     }
@@ -96,7 +96,7 @@ class Orders
         return $this;
     }
 
-    public function setNote(string $note)
+    public function setNote(string|null $note)
     {
         $this->note = $note;
         return $this;

@@ -76,7 +76,7 @@ class ItemsInWarehouseList extends \App\UI\Tests\TestCase
         $data_creator = $this->data_creator_factory->create();
         $items_in_warehouse_full_model = $this->items_in_warehouse_full_model_factory->create();
         
-        $data_creator->createTwoItemsInNewWarehouse('warehouse_nfjdsfjdhskds', 'item_nfjdsfjdhskds', false);
+        $data_creator->createTwoItemsInNewTwoWarehouses('warehouse_nfjdsfjdhskds', 'item_nfjdsfjdhskds', false);
         $warehouse = $this->em->getRepository(Warehouse::class)->findOneByName('warehouse_nfjdsfjdhskds_1');
         
         $url = $this->http_request->getUrl()
@@ -96,7 +96,7 @@ class ItemsInWarehouseList extends \App\UI\Tests\TestCase
     protected function doBriefListTest(bool $reserve_few_items)
     {
         $data_creator = $this->data_creator_factory->create();
-        $items_in_new_warehouse = $data_creator->createTwoItemsInNewWarehouse('warehouse_nfjdsfjdhskds', 'item_nfjdsfjdhskds', $reserve_few_items);
+        $items_in_new_warehouse = $data_creator->createTwoItemsInNewTwoWarehouses('warehouse_nfjdsfjdhskds', 'item_nfjdsfjdhskds', $reserve_few_items);
         $items_in_new_warehouse_list = $this->items_in_warehouse_model_factory->create()->getList($reserve_few_items);        
         Assert::equal($items_in_new_warehouse['warehouse_nfjdsfjdhskds_1'], $items_in_new_warehouse_list['warehouse_nfjdsfjdhskds_1']);
         Assert::equal($items_in_new_warehouse['warehouse_nfjdsfjdhskds_2'], $items_in_new_warehouse_list['warehouse_nfjdsfjdhskds_2']);
