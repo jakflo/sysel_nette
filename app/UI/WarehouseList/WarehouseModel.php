@@ -38,7 +38,7 @@ class WarehouseModel
     
     public function printSimpleListForSelect()
     {
-        return $this->db->fetchPairs("SELECT id, name FROM Warehouse ORDER BY id");
+        return $this->db->fetchPairs("SELECT id, name FROM warehouse ORDER BY id");
     }
     
     public function rename(int $id, string $new_name)
