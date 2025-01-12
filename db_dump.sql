@@ -48,6 +48,23 @@ INSERT INTO `client` (`id`, `company_name`, `forname`, `surname`, `middlename`, 
 (1,	NULL,	'Dan',	'Šroubek',	NULL,	NULL,	'dšr@mail.cz',	'800000000',	3,	'2020-05-05',	NULL),
 (2,	NULL,	'Ujo',	'Pompo',	NULL,	NULL,	'pom@rumbco.cz',	'700000000',	4,	'2020-06-10',	NULL);
 
+DROP TABLE IF EXISTS `manufacturer`;
+CREATE TABLE `manufacturer` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL,
+  `email` varchar(45) NOT NULL,
+  `phone` varchar(45) DEFAULT NULL,
+  `address_id` int unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `address_id` (`address_id`),
+  CONSTRAINT `manufacturer_ibfk_1` FOREIGN KEY (`address_id`) REFERENCES `address` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+INSERT INTO `manufacturer` (`id`, `name`, `email`, `phone`, `address_id`) VALUES
+(1,	'Trusty engineer',	'orders@trusty_en.in',	'800000000',	1),
+(2,	'Bean seamstress',	'Manuel_Varga@mex.us',	'800000001',	2);
+
 DROP TABLE IF EXISTS `item`;
 CREATE TABLE `item` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
@@ -106,46 +123,6 @@ INSERT INTO `item_with_lot` (`id`, `item_id`, `lot`, `added`) VALUES
 (11,	5,	'd11525',	'2024-09-09 19:00:00'),
 (13,	4,	'u11528',	'2024-12-03 22:48:20');
 
-DROP TABLE IF EXISTS `manufacturer`;
-CREATE TABLE `manufacturer` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) NOT NULL,
-  `email` varchar(45) NOT NULL,
-  `phone` varchar(45) DEFAULT NULL,
-  `address_id` int unsigned NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id_UNIQUE` (`id`),
-  KEY `address_id` (`address_id`),
-  CONSTRAINT `manufacturer_ibfk_1` FOREIGN KEY (`address_id`) REFERENCES `address` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
-INSERT INTO `manufacturer` (`id`, `name`, `email`, `phone`, `address_id`) VALUES
-(1,	'Trusty engineer',	'orders@trusty_en.in',	'800000000',	1),
-(2,	'Bean seamstress',	'Manuel_Varga@mex.us',	'800000001',	2);
-
-DROP TABLE IF EXISTS `order_has_item`;
-CREATE TABLE `order_has_item` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `order_id` int unsigned NOT NULL,
-  `item_id` int unsigned NOT NULL,
-  `amount` int NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id_UNIQUE` (`id`),
-  KEY `order_id` (`order_id`),
-  KEY `item_id` (`item_id`),
-  CONSTRAINT `order_has_item_ibfk_2` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `order_has_item_ibfk_3` FOREIGN KEY (`item_id`) REFERENCES `item` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
-INSERT INTO `order_has_item` (`id`, `order_id`, `item_id`, `amount`) VALUES
-(1,	1,	1,	5),
-(2,	1,	2,	5),
-(3,	1,	3,	1),
-(4,	2,	4,	3),
-(5,	2,	5,	29),
-(7,	3,	2,	2),
-(8,	3,	1,	3);
-
 DROP TABLE IF EXISTS `order_status`;
 CREATE TABLE `order_status` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
@@ -198,6 +175,31 @@ INSERT INTO `warehouse` (`id`, `name`, `area`, `created`, `last_edited`) VALUES
 (1,	'sklad 1',	1500,	'2020-04-23',	'2024-12-06'),
 (3,	'sklad 2',	2000,	'2020-04-23',	'2024-12-02'),
 (12,	'sklad 3',	2000,	'2024-11-17',	'2024-12-11');
+
+DROP TABLE IF EXISTS `order_has_item`;
+CREATE TABLE `order_has_item` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `order_id` int unsigned NOT NULL,
+  `item_id` int unsigned NOT NULL,
+  `amount` int NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `order_id` (`order_id`),
+  KEY `item_id` (`item_id`),
+  CONSTRAINT `order_has_item_ibfk_2` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `order_has_item_ibfk_3` FOREIGN KEY (`item_id`) REFERENCES `item` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+INSERT INTO `order_has_item` (`id`, `order_id`, `item_id`, `amount`) VALUES
+(1,	1,	1,	5),
+(2,	1,	2,	5),
+(3,	1,	3,	1),
+(4,	2,	4,	3),
+(5,	2,	5,	29),
+(7,	3,	2,	2),
+(8,	3,	1,	3);
+
+
 
 DROP TABLE IF EXISTS `warehouse_has_item`;
 CREATE TABLE `warehouse_has_item` (
