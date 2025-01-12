@@ -54,7 +54,7 @@ final class WarehouseListPresenter extends \Nette\Application\UI\Presenter
                 ->addRule($form::Min, 'Plocha musí být celé kladné číslo', 1)
                 ->setRequired('Povinný údaj')
                 ;
-        $form->addSubmit('sent', 'Vytořit');
+        $form->addSubmit('sent', 'Vytvořit');
         $form->onSuccess[] = [$this, 'doNewWarehouse'];
         
         return $form;
