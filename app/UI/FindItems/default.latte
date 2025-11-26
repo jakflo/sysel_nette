@@ -51,7 +51,6 @@
 {block content}
 <h1>Hledat položky</h1>
 
-<span id="data_for_react" class="hidden">{$data_for_react}</span>
 <div id="search_react"></div>
 
 {if ($items_requested)}
@@ -73,14 +72,6 @@
 {/block}
 
 {block moreScripts}
-    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script type="text/babel" src="{$basePath}/js/search_items/SearchForm.js"></script>
-    <script type="text/babel" src="{$basePath}/js/search_items/Warehouses.js"></script>
-    <script type="text/babel" src="{$basePath}/js/search_items/ItemRowSelect.js"></script>
-    <script type="text/babel" src="{$basePath}/js/search_items/ItemRowAmount.js"></script>
-    <script type="text/babel" src="{$basePath}/js/search_items/ItemRowDelete.js"></script>
-    <script type="text/babel" src="{$basePath}/js/search_items/OutputForm.js"></script>
-    <script type="text/babel" src="{$basePath}/js/search_items/main.js"></script>
+    <script>window.APP_DATA = {$data_for_react|noescape};</script>
+    <script type="module" crossorigin src="{$basePath}/js/search_items/index-B04RpsXe.js"></script>
 {/block}

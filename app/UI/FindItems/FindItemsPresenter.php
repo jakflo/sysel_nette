@@ -63,8 +63,7 @@ final class FindItemsPresenter extends \Nette\Application\UI\Presenter
         ];
         
         $this->template->title = 'Syslovo sklad | Hledat položky';
-        $this->template->data_for_react = base64_encode(json_encode($data_for_react));
-        
+        $this->template->data_for_react = json_encode($data_for_react, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP);
     }
     
     protected function getQueryData(): array|null

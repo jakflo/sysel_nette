@@ -16,7 +16,6 @@ class OutputForm extends React.Component
     
     render = () => 
     {
-//        console.log(this.state.data);
         var data = JSON.stringify(this.state.data);
         return (
                 <form name="search_form_output">
