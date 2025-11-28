@@ -125,6 +125,22 @@ class ItemsModel
         return $item;
     }
     
+    public function getItems(array $items_id): array
+    {
+        if (count($items_id) === 0) {
+            throw new \Exception('pole nemuze byt prazdne');
+        }
+        
+        return $this->em->createQuery(
+            "SELECT it 
+            FROM App\\UI\\Entities\\Item it 
+            WHERE it.id IN(:iid)"
+        )
+            ->setParameter('iid', $items_id)
+            ->getResult()
+        ;
+    }
+    
     protected function checkIfNameIsUsed(string $name)
     {
         if ($this->em->getRepository(Item::class)->findOneByName($name)) {

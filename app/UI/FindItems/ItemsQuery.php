@@ -2,6 +2,7 @@
 namespace App\UI\FindItems;
 
 use \App\UI\Tools\ArrayTools;
+use \App\UI\Entities\Item;
 
 class ItemsQuery
 {
@@ -15,6 +16,7 @@ class ItemsQuery
     public function __construct(
             protected \App\UI\ItemsInWarehouse\ItemsInWarehouseModelFactory $items_in_warehouse_model_factory, 
             protected \App\UI\WarehouseList\WarehouseModelFactory $warehouse_model_factory, 
+            protected \App\UI\ItemsList\ItemsModelFactory $items_model_factory, 
             protected array|null $used_warehouses_id, 
             protected array $items_list
     )
@@ -26,6 +28,7 @@ class ItemsQuery
     protected function doQuery()
     {
         $items_id = array_column($this->items_list, 'item_id');
+        $this->setItemsName($items_id);
         $items_in_warehouse_model = $this->items_in_warehouse_model_factory->create();
         $list_by_warehouses = $items_in_warehouse_model->getList(true, $this->used_warehouses_id, $items_id);
         $this->items_not_found = $this->items_list;
@@ -36,7 +39,6 @@ class ItemsQuery
         }
         
         $this->list_by_items = ArrayTools::groupMultiArray($list, 'item_id');
-        $this->item_names = ArrayTools::multiarrayToAsocPairs($list, 'item_id', 'item');
         $this->setWarehousesWithAllItems();
         $this->setWarehousesWithSomeItem();
     }
@@ -96,8 +98,26 @@ class ItemsQuery
         $this->items_not_found[$items_not_found_key]['item_amount'] -= $item_amount;
     }
     
+    protected function setItemsName(array $items_id)
+    {
+        if (count($items_id) === 0) {
+            $this->item_names = [];
+        }
+        
+        $items = $this->items_model_factory->create()->getItems($items_id);
+        $items_array = array_map(function(Item $item) {
+            return ['id' => $item->getId(), 'name' => $item->getName()];
+        }, $items);
+        
+        $this->item_names = ArrayTools::multiarrayToAsocPairs($items_array, 'id', 'name');
+    }
+
     public function getItemAmount(int $item_id, int $warehouse_id): int
     {
+        if (!isset($this->list_by_items[$item_id])) {
+            return 0;
+        }
+        
         $item_amount = ArrayTools::searchInMultiArray($this->list_by_items[$item_id], $warehouse_id, 'warehouse_id');
         return count($item_amount) > 0 ? reset($item_amount)['n'] : 0;
     }
