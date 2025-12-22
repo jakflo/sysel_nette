@@ -53,6 +53,21 @@ class ArrayTools
         return array_combine($keys, $values);
     }
     
+    // udela asociativni pole z prvich dvou sloupcu vicepole
+    public static function asocPairsForFirstTwoInMultiarray(array $input): array
+    {
+        if (count($input) == 0) {
+            return [];
+        }
+        
+        $keys = array_keys($input[0]);
+        if (count($keys) < 2) {
+            throw new \Exception('Vysledek musi mit nejmene 2 sloupce');
+        }
+        
+        return ArrayTools::multiarrayToAsocPairs($input, $keys[0], $keys[1]);
+    }
+    
     public static function multiarrayToArrayOfObjects(array $input): array
     {
         foreach ($input as &$row) {

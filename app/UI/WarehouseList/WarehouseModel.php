@@ -5,11 +5,11 @@ use \App\UI\Exceptions\UsedNameException;
 use \App\UI\Exceptions\NotFoundException;
 use \App\UI\WarehouseList\NotEmptyException;
 use \App\UI\Entities\Warehouse;
+use \App\UI\Tools\ArrayTools;
 
 class WarehouseModel
 {
     public function __construct(
-            protected \App\UI\Model\Database $db, 
             protected \Doctrine\ORM\EntityManager $em
     )
     {
@@ -18,7 +18,7 @@ class WarehouseModel
     
     public function printList()
     {
-        $warehouses = $this->db->fetchAllObjects(
+        $warehouses = ArrayTools::multiarrayToArrayOfObjects($this->em->getConnection()->fetchAllAssociative(
                 "SELECT w.*, wa.area_filled
                 FROM warehouse w
                 LEFT JOIN 
@@ -32,13 +32,13 @@ class WarehouseModel
                     GROUP BY wi.warehouse_id
                 ) AS wa ON wa.warehouse_id = w.id                
                 ORDER BY w.id"
-        );        
+        ));        
         return $warehouses;
     }
     
     public function printSimpleListForSelect()
     {
-        return $this->db->fetchPairs("SELECT id, name FROM warehouse ORDER BY id");
+        return ArrayTools::asocPairsForFirstTwoInMultiarray($this->em->getConnection()->fetchAllAssociative("SELECT id, name FROM warehouse ORDER BY id"));
     }
     
     public function rename(int $id, string $new_name)

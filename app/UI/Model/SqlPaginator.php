@@ -3,13 +3,14 @@ namespace App\UI\Model;
 
 use \Nette\Http\IRequest;
 use \Doctrine\DBAL\Types\Type;
+use \App\UI\Tools\ArrayTools;
 
 class SqlPaginator extends PaginatorBase
 {
     protected Array $rows;
     
     public function __construct(
-            protected \App\UI\Model\Database $db,
+            protected \Doctrine\ORM\EntityManager $em,
             protected string $sql, 
             protected array $sql_params, 
             protected int $items_per_page, 
@@ -27,15 +28,15 @@ class SqlPaginator extends PaginatorBase
         $_offset = ($this->current_page - 1) * $this->items_per_page;
         $offset = $_offset < 0 ? 0 : $_offset;
         
-        $this->rows_count = $this->db->fetchOneField("SELECT COUNT(*) FROM ({$this->sql}) AS t", $this->sql_params);
+        $this->rows_count = $this->em->getConnection()->fetchOne("SELECT COUNT(*) FROM ({$this->sql}) AS t", $this->sql_params);
         $this->sql_params['limitcountqqq'] = $this->items_per_page;
         $this->sql_params['limitoffsetqqq'] = $offset;
         $page_params_types = ['limitcountqqq' => Type::getType('integer'), 'limitoffsetqqq' => Type::getType('integer')];
-        $this->rows = $this->db->fetchAllObjects(
+        $this->rows = ArrayTools::multiarrayToArrayOfObjects($this->em->getConnection()->fetchAllAssociative(
                 "{$this->sql} LIMIT :limitcountqqq OFFSET :limitoffsetqqq", 
                 $this->sql_params, 
                 array_merge($this->sql_params_types, $page_params_types)
-        );
+        ));
         $this->pages_count = ceil($this->rows_count / $this->items_per_page);
     }
     

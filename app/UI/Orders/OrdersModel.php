@@ -7,11 +7,11 @@ use \App\UI\Entities\Orders;
 use \App\UI\Entities\OrderHasItem;
 use \App\UI\Entities\OrderStatus;
 use \App\UI\Exceptions\NotFoundException;
+use \App\UI\Tools\ArrayTools;
 
 class OrdersModel
 {
     public function __construct(
-            protected \App\UI\Model\Database $db, 
             protected \Doctrine\ORM\EntityManager $em, 
             protected \App\UI\Model\SqlPaginatorFactory $sql_paginator_factory, 
             protected \App\UI\Orders\OrdersListFilterFactory $orders_list_filter_factory, 
@@ -97,7 +97,7 @@ class OrdersModel
     
     public function getOrderStatusesList()
     {
-        return $this->db->fetchPairs("SELECT id, name FROM order_status ORDER BY id");
+        return ArrayTools::asocPairsForFirstTwoInMultiarray($this->em->getConnection()->fetchAllAssociative("SELECT id, name FROM order_status ORDER BY id"));
     }
     
 }

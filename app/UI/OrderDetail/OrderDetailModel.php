@@ -8,12 +8,12 @@ use \Doctrine\DBAL\Types\Type;
 use \App\UI\Entities\OrderStatus;
 use \App\UI\Entities\Orders;
 use \Doctrine\ORM\Query;
+use \App\UI\Tools\ArrayTools;
 
 class OrderDetailModel
 {
     public function __construct(
             protected \Doctrine\ORM\EntityManager $em, 
-            protected \App\UI\Model\Database $db, 
             protected \App\UI\FindItems\ItemsQueryFactory $items_query_factory, 
             protected \App\UI\FindItems\FindItemsModelFactory $find_items_model_factory, 
             protected \App\UI\ItemsInWarehouse\ItemsInWarehouseModelFactory $items_in_warehouse_model_factory, 
@@ -142,10 +142,10 @@ class OrderDetailModel
         $statuses = new ProtectedIn();
         $statuses->addArray('sns', $allowed_statuses_shortname);
         
-        return $this->db->fetchPairs(
+        return ArrayTools::asocPairsForFirstTwoInMultiarray($this->em->getConnection()->fetchAllAssociative(
                 "SELECT short_name, name FROM order_status WHERE short_name IN({$statuses->getTokens('sns')}) ORDER BY id", 
                 $statuses->getData()
-                );
+                ));
     }
     
     /**
@@ -178,7 +178,7 @@ class OrderDetailModel
             $prefered_warehouses_params = [];
         }
         
-        $this->db->executeQuery(
+        $this->em->getConnection()->executeQuery(
                 "CREATE TEMPORARY TABLE wa AS 
                 SELECT wi.warehouse_id, (SUM(i.area) / w.area) AS area_filled
                 FROM warehouse_has_item wi 
@@ -191,7 +191,7 @@ class OrderDetailModel
         );
         
         foreach ($this->getItemsInOrder() as $order_item) {
-            $found_items = $this->db->fetchFirstColumn(
+            $found_items = $this->em->getConnection()->fetchFirstColumn(
                     "SELECT whi.id, 
                     CASE 
                         WHEN ws.id IS NULL THEN 0 
@@ -225,7 +225,7 @@ class OrderDetailModel
             $this->items_in_warehouse_model_factory->create()->changeItemsStatuses('reserved', $this->order_id, $found_items);
         }
         
-        $this->db->executeQuery("DROP TEMPORARY TABLE wa");
+        $this->em->getConnection()->executeQuery("DROP TEMPORARY TABLE wa");
         $this->changeOrderStatus('items_reserved');
     }
     

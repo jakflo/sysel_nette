@@ -11,7 +11,6 @@ use \Nette\Http\IRequest;
 class ItemsLotModel
 {
     public function __construct(
-            protected \App\UI\Model\Database $db, 
             protected \Doctrine\ORM\EntityManager $em, 
             protected \App\UI\ItemsList\ItemsModelFactory $items_model_factory, 
             protected \App\UI\Model\SqlPaginatorFactory $sql_paginator_factory

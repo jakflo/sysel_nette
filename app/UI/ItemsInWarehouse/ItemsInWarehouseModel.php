@@ -10,7 +10,6 @@ use \App\UI\Tools\ProtectedIn;
 class ItemsInWarehouseModel
 {
     public function __construct(
-            protected \App\UI\Model\Database $db, 
             protected \Doctrine\ORM\EntityManager $em, 
             protected \App\UI\ItemsList\ItemsModelFactory $items_model_factory, 
             protected \App\UI\ItemsLotList\ItemsLotModelFactory $items_lot_model_factory, 
@@ -52,7 +51,7 @@ class ItemsInWarehouseModel
     {
         $item_status_term = $available_items_only ? "= 'available'" : "IN ('available', 'reserved')";
         
-        return $this->db->fetchPairs(
+        return ArrayTools::asocPairsForFirstTwoInMultiarray($this->em->getConnection()->fetchAllAssociative(
                 "SELECT w.id, w.name 
                 FROM warehouse w 
                 LEFT JOIN 
@@ -63,7 +62,7 @@ class ItemsInWarehouseModel
                     WHERE ist.short_name {$item_status_term}
                 ) AS wi ON wi.warehouse_id = w.id 
                 WHERE wi.id IS NULL"
-        );
+        ));
     }
     
     public function getItemMaxAmount(int $warehouse_id, int $item_id): int
@@ -111,7 +110,7 @@ class ItemsInWarehouseModel
         $warehouse_has_item_id_term = new ProtectedIn();
         $warehouse_has_item_id_term->addArray('wid', $warehouse_has_item_id);
         
-        $this->db->executeQuery(
+        $this->em->getConnection()->executeQuery(
             "UPDATE warehouse_has_item SET order_id = :oid, status_id = :sid WHERE id IN({$warehouse_has_item_id_term->getTokens('wid')})", 
             array_merge(
                 [
