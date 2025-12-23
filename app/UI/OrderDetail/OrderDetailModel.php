@@ -2,13 +2,12 @@
 namespace App\UI\OrderDetail;
 
 use \App\UI\Exceptions\NotFoundException;
-use \App\UI\Tools\ProtectedIn;
 use \App\UI\OrderDetail\OrderDetailException;
-use \Doctrine\DBAL\Types\Type;
 use \App\UI\Entities\OrderStatus;
-use \App\UI\Entities\Orders;
 use \Doctrine\ORM\Query;
 use \App\UI\Tools\ArrayTools;
+use \Doctrine\DBAL\ParameterType;
+use \Doctrine\DBAL\ArrayParameterType;
 
 class OrderDetailModel
 {
@@ -139,13 +138,11 @@ class OrderDetailModel
         $allowed_statuses_shortname = $this->getAllowedStatusChanges($current_status);
         array_unshift($allowed_statuses_shortname, $order_details['status_shortname']);
         
-        $statuses = new ProtectedIn();
-        $statuses->addArray('sns', $allowed_statuses_shortname);
-        
         return ArrayTools::asocPairsForFirstTwoInMultiarray($this->em->getConnection()->fetchAllAssociative(
-                "SELECT short_name, name FROM order_status WHERE short_name IN({$statuses->getTokens('sns')}) ORDER BY id", 
-                $statuses->getData()
-                ));
+            "SELECT short_name, name FROM order_status WHERE short_name IN(?) ORDER BY id", 
+            [$allowed_statuses_shortname], 
+            [ArrayParameterType::STRING]
+        ));
     }
     
     /**
@@ -166,18 +163,6 @@ class OrderDetailModel
             throw new OrderDetailException('Vsechny polozky objednavky nebyly nalezeny', OrderDetailException::NOTALLITEMSFOUND);
         }
         
-        if (count($prefered_warehouses_id) > 0) {
-            $find_items_model = $this->find_items_model_factory->create();
-            $find_items_model->checkWarehousesExist($prefered_warehouses_id);
-            $prefered_warehouses_in = new ProtectedIn();
-            $prefered_warehouses_in->addArray('wid', $prefered_warehouses_id);
-            $prefered_warehouses_term = "AND id IN ({$prefered_warehouses_in->getTokens('wid')})";
-            $prefered_warehouses_params = $prefered_warehouses_in->getData();
-        } else {
-            $prefered_warehouses_term = '';
-            $prefered_warehouses_params = [];
-        }
-        
         $this->em->getConnection()->executeQuery(
                 "CREATE TEMPORARY TABLE wa AS 
                 SELECT wi.warehouse_id, (SUM(i.area) / w.area) AS area_filled
@@ -191,6 +176,17 @@ class OrderDetailModel
         );
         
         foreach ($this->getItemsInOrder() as $order_item) {
+            $params = [$order_item['item_id'], $order_item['item_amount']];
+            $params_type = [ParameterType::INTEGER, ParameterType::INTEGER];
+            if (count($prefered_warehouses_id) > 0) {
+                $find_items_model = $this->find_items_model_factory->create();
+                $find_items_model->checkWarehousesExist($prefered_warehouses_id);
+                $prefered_warehouses_term = "AND id IN (?)";
+                array_unshift($params, $prefered_warehouses_id);
+                array_unshift($params_type, ArrayParameterType::INTEGER);
+            } else {
+                $prefered_warehouses_term = '';
+            }
             $found_items = $this->em->getConnection()->fetchFirstColumn(
                     "SELECT whi.id, 
                     CASE 
@@ -210,17 +206,11 @@ class OrderDetailModel
                         SELECT * FROM wa 
                     ) AS waj ON waj.warehouse_id = w.id
                     WHERE ist.short_name = 'available' 
-                    AND it.id = :itid 
+                    AND it.id = ? 
                     ORDER BY wp DESC, waj.area_filled DESC, whi.id 
-                    LIMIT :am", 
-                    array_merge(
-                        [
-                            'itid' => $order_item['item_id'], 
-                            'am' => $order_item['item_amount']
-                        ], 
-                        $prefered_warehouses_params                                        
-                    ), 
-                    ['am' => Type::getType('integer')]
+                    LIMIT ?", 
+                    $params,
+                    $params_type
             );
             $this->items_in_warehouse_model_factory->create()->changeItemsStatuses('reserved', $this->order_id, $found_items);
         }

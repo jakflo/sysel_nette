@@ -4,8 +4,6 @@ namespace App\UI\Tests;
 use \Tester\Assert;
 use \App\UI\OrderDetail\OrderDetailModel;
 use \App\UI\OrderDetail\OrderDetailException;
-use \App\UI\Entities\WarehouseHasItem;
-use \App\UI\Entities\ItemStatus;
 
 class Orders extends \App\UI\Tests\TestCase
 {
@@ -55,18 +53,32 @@ class Orders extends \App\UI\Tests\TestCase
     public function testAssignItems()
     {
         $orders_scenario = $this->orders_scenario_factory->create();
+        
+        $warehouse_1_id = $orders_scenario->getWarehouse1Id();
         $warehouse_2_id = $orders_scenario->getWarehouse2Id();
+        $warehouse_3_id = $orders_scenario->getWarehouse3Id(); //tento sklad je temer plny, ostatni temer prazdne
+        
         $order_detail_1 = $this->order_detail_model_factory->create($orders_scenario->getOrder1()->getId());
         $order_detail_2 = $this->order_detail_model_factory->create($orders_scenario->getOrder2()->getId());
+        $order_detail_3 = $this->order_detail_model_factory->create($orders_scenario->getOrder3()->getId());
         
         $order_detail_1->assignItemsToOrder([$orders_scenario->getWarehouse2Id()]);
+        $order_detail_3->assignItemsToOrder();
         $order_1_id = $orders_scenario->getOrder1()->getId();
+        $order_3_id = $orders_scenario->getOrder3()->getId();
         Assert::equal($order_detail_1->getOrderDetails()['status_shortname'], 'items_reserved');
+        Assert::equal($order_detail_3->getOrderDetails()['status_shortname'], 'items_reserved');
         
         Assert::equal($this->getReservedItemsInWarehouseCount($warehouse_2_id, $orders_scenario->getItem1Id(), $order_1_id), 5);
         Assert::equal($this->getReservedItemsInWarehouseCount($warehouse_2_id, $orders_scenario->getItem2Id(), $order_1_id), 5);
-        Assert::equal($this->getReservedItemsInWarehouseCount($orders_scenario->getWarehouse3Id(), $orders_scenario->getItem1Id(), $order_1_id), 2);
-        Assert::equal($this->getReservedItemsInWarehouseCount($orders_scenario->getWarehouse3Id(), $orders_scenario->getItem2Id(), $order_1_id), 3);
+        Assert::equal($this->getReservedItemsInWarehouseCount($warehouse_3_id, $orders_scenario->getItem1Id(), $order_1_id), 2);
+        Assert::equal($this->getReservedItemsInWarehouseCount($warehouse_3_id, $orders_scenario->getItem2Id(), $order_1_id), 3);
+        Assert::equal($this->getReservedItemsInWarehouseCount($warehouse_1_id, $orders_scenario->getItem1Id(), $order_1_id), 0);
+        Assert::equal($this->getReservedItemsInWarehouseCount($warehouse_1_id, $orders_scenario->getItem2Id(), $order_1_id), 0);
+        
+        Assert::equal($this->getReservedItemsInWarehouseCount($warehouse_3_id, $orders_scenario->getItem3Id(), $order_3_id), 5);
+        Assert::equal($this->getReservedItemsInWarehouseCount($warehouse_1_id, $orders_scenario->getItem3Id(), $order_3_id), 3);
+        Assert::equal($this->getReservedItemsInWarehouseCount($warehouse_2_id, $orders_scenario->getItem3Id(), $order_3_id), 0);
         
         Assert::exception(
             function() use($order_detail_1, $warehouse_2_id) {

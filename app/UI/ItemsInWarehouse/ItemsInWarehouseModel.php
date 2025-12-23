@@ -5,7 +5,8 @@ use \App\UI\Tools\ArrayTools;
 use \App\UI\ItemsInWarehouse\WarehouseCapacityExceededException;
 use \App\UI\Entities\ItemStatus;
 use \App\UI\Entities\WarehouseHasItem;
-use \App\UI\Tools\ProtectedIn;
+use \Doctrine\DBAL\ParameterType;
+use \Doctrine\DBAL\ArrayParameterType;
 
 class ItemsInWarehouseModel
 {
@@ -107,18 +108,10 @@ class ItemsInWarehouseModel
     public function changeItemsStatuses(string $item_status_short_name, int|null $order_id, array $warehouse_has_item_id)
     {
         $item_status_id = $this->em->getRepository(ItemStatus::class)->findOneBy(['short_name' => $item_status_short_name])->getId();
-        $warehouse_has_item_id_term = new ProtectedIn();
-        $warehouse_has_item_id_term->addArray('wid', $warehouse_has_item_id);
-        
         $this->em->getConnection()->executeQuery(
-            "UPDATE warehouse_has_item SET order_id = :oid, status_id = :sid WHERE id IN({$warehouse_has_item_id_term->getTokens('wid')})", 
-            array_merge(
-                [
-                    'oid' => $order_id, 
-                    'sid' => $item_status_id
-                ], 
-                $warehouse_has_item_id_term->getData()
-            )
+            "UPDATE warehouse_has_item SET order_id = ?, status_id = ? WHERE id IN(?)", 
+            [$order_id, $item_status_id, $warehouse_has_item_id],
+            [ParameterType::INTEGER, ParameterType::INTEGER, ArrayParameterType::INTEGER]
         );
     }
     
