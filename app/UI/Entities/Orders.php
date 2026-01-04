@@ -21,10 +21,10 @@ class Orders
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     protected \DateTime $added;
     
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    protected \DateTime $last_edited;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    protected \DateTime|null $last_edited;
     
-    #[ORM\Column(type: Types::STRING)]
+    #[ORM\Column(type: Types::STRING, length: 128, nullable: true)]
     protected string|null $note;
     
     #[ORM\Column(type: Types::INTEGER)]

@@ -3,9 +3,6 @@ namespace App\UI\Entities;
 
 use \Doctrine\ORM\Mapping as ORM;
 use \Doctrine\DBAL\Types\Types;
-use \Doctrine\Common\Collections\ArrayCollection;
-use \Doctrine\Common\Collections\Collection;
-use \App\UI\Entities\WarehouseHasItem;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'warehouse')]
@@ -16,7 +13,7 @@ class Warehouse
     #[ORM\Column(type: Types::INTEGER)]
     protected int $id;
     
-    #[ORM\Column(type: Types::STRING)]
+    #[ORM\Column(type: Types::STRING, length: 64)]
     protected string $name;
     
     #[ORM\Column(type: Types::INTEGER)]
@@ -25,7 +22,7 @@ class Warehouse
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     protected \DateTime $created;
     
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     protected \DateTime | null $last_edited;
 
     public function getId(): int

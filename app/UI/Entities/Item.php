@@ -14,7 +14,7 @@ class Item
     #[ORM\Column(type: Types::INTEGER)]
     protected int $id;
     
-    #[ORM\Column(type: Types::STRING)]
+    #[ORM\Column(type: Types::STRING, length: 64)]
     protected string $name;
     
     #[ORM\Column(type: Types::FLOAT)]

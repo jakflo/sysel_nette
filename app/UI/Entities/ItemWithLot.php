@@ -17,7 +17,7 @@ class ItemWithLot
     #[ORM\Column(type: Types::INTEGER)]
     protected int $item_id;
     
-    #[ORM\Column(type: Types::STRING)]
+    #[ORM\Column(type: Types::STRING, length: 40)]
     protected string $lot;
     
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]

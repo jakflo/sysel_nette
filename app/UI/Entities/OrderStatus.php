@@ -13,10 +13,10 @@ class OrderStatus
     #[ORM\Column(type: Types::INTEGER)]
     protected int $id;
     
-    #[ORM\Column(type: Types::STRING)]
+    #[ORM\Column(type: Types::STRING, length: 32)]
     protected string $short_name;
     
-    #[ORM\Column(type: Types::STRING)]
+    #[ORM\Column(type: Types::STRING, length: 64)]
     protected string $name;
     
     public function getShortName(): string

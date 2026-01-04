@@ -14,25 +14,25 @@ class Client
     #[ORM\Column(type: Types::INTEGER)]
     protected int $id;
     
-    #[ORM\Column(type: Types::STRING)]
+    #[ORM\Column(type: Types::STRING, length: 64, nullable: true)]
     protected string|null $company_name;
     
-    #[ORM\Column(type: Types::STRING)]
+    #[ORM\Column(type: Types::STRING, length: 45)]
     protected string $forname;
     
-    #[ORM\Column(type: Types::STRING)]
+    #[ORM\Column(type: Types::STRING, length: 45)]
     protected string $surname;
     
-    #[ORM\Column(type: Types::STRING)]
+    #[ORM\Column(type: Types::STRING, length: 45, nullable: true)]
     protected string|null $middlename;
     
-    #[ORM\Column(type: Types::STRING)]
+    #[ORM\Column(type: Types::STRING, length: 45, nullable: true)]
     protected string|null $title;
     
-    #[ORM\Column(type: Types::STRING)]
+    #[ORM\Column(type: Types::STRING, length: 45)]
     protected string $email;
     
-    #[ORM\Column(type: Types::STRING)]
+    #[ORM\Column(type: Types::STRING, length: 45, nullable: true)]
     protected string|null $phone;
     
     #[ORM\Column(type: Types::INTEGER)]
@@ -41,7 +41,7 @@ class Client
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     protected \DateTime $added;
     
-    #[ORM\Column(type: Types::STRING)]
+    #[ORM\Column(type: Types::STRING, length: 128, nullable: true)]
     protected string|null $note;
     
     #[ORM\ManyToOne(targetEntity: Address::class)]

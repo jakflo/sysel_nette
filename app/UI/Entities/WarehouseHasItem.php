@@ -25,7 +25,7 @@ class WarehouseHasItem
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     protected \DateTime $added;
     
-    #[ORM\Column(type: Types::INTEGER)]
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
     protected int|null $order_id;
     
     #[ORM\Column(type: Types::INTEGER)]

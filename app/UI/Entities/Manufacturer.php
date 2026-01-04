@@ -14,14 +14,14 @@ class Manufacturer
     #[ORM\Column(type: Types::INTEGER)]
     protected int $id;
     
-    #[ORM\Column(type: Types::STRING)]
+    #[ORM\Column(type: Types::STRING, length: 64)]
     protected string $name;
     
-    #[ORM\Column(type: Types::STRING)]
+    #[ORM\Column(type: Types::STRING, length: 45)]
     protected string $email;
     
-    #[ORM\Column(type: Types::STRING)]
-    protected string $phone;
+    #[ORM\Column(type: Types::STRING, length: 45, nullable: true)]
+    protected string|null $phone;
     
     #[ORM\Column(type: Types::INTEGER)]
     protected string $address_id;
