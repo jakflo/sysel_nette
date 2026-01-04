@@ -1,0 +1,22 @@
+database:
+	dsn: 'mysql:host=%database_connection.host%;dbname=%database_connection.testDbname%'
+	user: %database_connection.user%
+	password: %database_connection.password%
+
+includes:
+	- console.neon
+
+search:
+	-	in: %rootDir%/tests/Classes
+		classes:
+			- *TestClass
+			- *Factory
+
+# ACHTUNG!!! testovac pokazde smaze a znovu vytvori DB, proto zde MUSI byt nastaveno jmeno testovaci DB, jinak testy smazou data
+doctrine.dbal:
+    connection:
+        dbname: %database_connection.testDbname%
+
+di:
+	export:
+		parameters: yes

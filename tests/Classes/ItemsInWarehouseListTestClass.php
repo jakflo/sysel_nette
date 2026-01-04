@@ -1,5 +1,5 @@
 <?php
-namespace App\UI\Tests;
+namespace tests\Classes;
 
 use \Tester\Assert;
 use \App\UI\Tools\ArrayTools;
@@ -7,10 +7,12 @@ use \App\UI\Entities\Warehouse;
 use \App\UI\Entities\WarehouseHasItem;
 use \App\UI\ItemsInWarehouse\WarehouseCapacityExceededException;
 
-class ItemsInWarehouseList extends \App\UI\Tests\TestCase
+//require_once 'bootstrap.php';
+
+class ItemsInWarehouseListTestClass extends SyselTestCase
 {
     public function __construct(
-            protected \App\UI\Tests\DataCreatorFactory $data_creator_factory, 
+            protected \tests\Classes\DataCreatorFactory $data_creator_factory, 
             protected \Doctrine\ORM\EntityManager $em, 
             protected \App\UI\ItemsInWarehouse\ItemsInWarehouseModelFactory $items_in_warehouse_model_factory, 
             protected \App\UI\ItemsList\ItemsModelFactory $items_model_factory, 
@@ -103,3 +105,5 @@ class ItemsInWarehouseList extends \App\UI\Tests\TestCase
     }
     
 }
+
+

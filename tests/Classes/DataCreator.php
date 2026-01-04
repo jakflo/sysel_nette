@@ -1,5 +1,5 @@
 <?php
-namespace App\UI\Tests;
+namespace tests\Classes;
 
 use \App\UI\Entities\ItemStatus;
 

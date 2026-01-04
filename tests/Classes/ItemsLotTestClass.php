@@ -1,5 +1,5 @@
 <?php
-namespace App\UI\Tests;
+namespace tests\Classes;
 
 use \Tester\Assert;
 use \App\UI\Entities\ItemWithLot;
@@ -7,10 +7,10 @@ use \App\UI\Exceptions\UsedNameException;
 use \App\UI\Exceptions\NotFoundException;
 use \App\UI\ItemsLotList\ItemLotIsUsedException;
 
-class ItemsLot extends \App\UI\Tests\TestCase
+class ItemsLotTestClass extends SyselTestCase
 {
     public function __construct(
-        protected \App\UI\Tests\DataCreatorFactory $data_creator_factory, 
+        protected \tests\Classes\DataCreatorFactory $data_creator_factory, 
         protected \Doctrine\ORM\EntityManager $em,         
         protected \Nette\Http\IRequest $http_request, 
         protected \App\UI\ItemsInWarehouse\ItemsInWarehouseModelFactory $items_in_warehouse_model_factory, 

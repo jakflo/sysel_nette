@@ -1,5 +1,5 @@
 <?php
-namespace App\UI\Tests;
+namespace tests\Classes;
 
 use \Tester\Assert;
 use \App\UI\Entities\Warehouse;
@@ -7,11 +7,11 @@ use \App\UI\Tools\ArrayTools;
 use \App\UI\Exceptions\UsedNameException;
 use \App\UI\WarehouseList\NotEmptyException;
 
-class WarehouseList extends \App\UI\Tests\TestCase
+class WarehouseListTestClass extends SyselTestCase
 {
     public function __construct(
             protected \App\UI\WarehouseList\WarehouseModelFactory $warehouse_model_factory, 
-            protected \App\UI\Tests\DataCreatorFactory $data_creator_factory, 
+            protected \tests\Classes\DataCreatorFactory $data_creator_factory, 
             protected \Doctrine\ORM\EntityManager $em
     )
     {

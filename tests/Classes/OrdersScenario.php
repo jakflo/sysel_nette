@@ -1,5 +1,5 @@
 <?php
-namespace App\UI\Tests;
+namespace tests\Classes;
 
 use \App\UI\Entities\Orders;
 
@@ -17,7 +17,7 @@ class OrdersScenario
     protected Orders $order_3;
     
     public function __construct(
-        protected \App\UI\Tests\DataCreatorFactory $data_creator_factory,         
+        protected \tests\Classes\DataCreatorFactory $data_creator_factory,         
         protected \App\UI\Orders\OrdersModelFactory $orders_model_factory,          
         protected \App\UI\ItemsInWarehouse\ItemsInWarehouseModelFactory $items_in_warehouse_model_factory
     )

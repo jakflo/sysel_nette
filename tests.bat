@@ -1,0 +1,1 @@
+php vendor/bin/tester -C -j=1 tests

@@ -1,15 +1,15 @@
 <?php
-namespace App\UI\Tests;
+namespace tests\Classes;
 
 use \Tester\Assert;
 use \App\UI\Entities\Item;
 use \App\UI\Exceptions\UsedNameException;
 use \App\UI\ItemsList\ItemIsUsedException;
 
-class ItemsList extends \App\UI\Tests\TestCase
+class ItemsListTestClass extends SyselTestCase
 {
     public function __construct(
-            protected \App\UI\Tests\DataCreatorFactory $data_creator_factory, 
+            protected \tests\Classes\DataCreatorFactory $data_creator_factory, 
             protected \Doctrine\ORM\EntityManager $em, 
             protected \App\UI\ItemsList\ItemsModelFactory $items_model_factory
     )

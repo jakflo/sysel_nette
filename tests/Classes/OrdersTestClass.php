@@ -1,15 +1,15 @@
 <?php
-namespace App\UI\Tests;
+namespace tests\Classes;
 
 use \Tester\Assert;
 use \App\UI\OrderDetail\OrderDetailModel;
 use \App\UI\OrderDetail\OrderDetailException;
 
-class Orders extends \App\UI\Tests\TestCase
+class OrdersTestClass extends SyselTestCase
 {
     public function __construct(
-        protected \App\UI\Tests\DataCreatorFactory $data_creator_factory, 
-        protected \App\UI\Tests\OrdersScenarioFactory $orders_scenario_factory, 
+        protected \tests\Classes\DataCreatorFactory $data_creator_factory, 
+        protected \tests\Classes\OrdersScenarioFactory $orders_scenario_factory, 
         protected \Doctrine\ORM\EntityManager $em, 
         protected \App\UI\Orders\OrdersModelFactory $orders_model_factory, 
         protected \App\UI\OrderDetail\OrderDetailModelFactory $order_detail_model_factory, 

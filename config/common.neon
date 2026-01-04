@@ -1,9 +1,6 @@
 includes:
 	- database_connection.neon
 
-parameters:
-
-
 application:
 	errorPresenter:
 		4xx: Error:Error4xx

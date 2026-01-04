@@ -4,3 +4,5 @@ parameters:
 		user: root
 		password: mysql
 		dbname: sysel
+		testDbname: sysel_test #jmeno DB pro unit testy. MUSI se lisit od dbname, bo testy na zacatku smazou data
+		driver: pdo_mysql

@@ -1,13 +1,13 @@
 <?php
-namespace App\UI\Tests;
+namespace tests\Classes;
 
 use \Tester\Assert;
 use \App\UI\Tools\ArrayTools;
 
-class SearchItems extends \App\UI\Tests\TestCase
+class SearchItemsTestClass extends SyselTestCase
 {
     public function __construct(
-        protected \App\UI\Tests\DataCreatorFactory $data_creator_factory, 
+        protected \tests\Classes\DataCreatorFactory $data_creator_factory, 
         protected \Doctrine\ORM\EntityManager $em, 
         protected \App\UI\FindItems\ItemsQueryFactory $items_query_factory, 
         protected \App\UI\ItemsInWarehouse\ItemsInWarehouseModelFactory $items_in_warehouse_model_factory

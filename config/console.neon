@@ -1,0 +1,5 @@
+services:
+	doctrine.orm.console.entityManagerHelper:
+		autowired: false
+	doctrine.orm.entityManagerDecorator:
+		autowired: false

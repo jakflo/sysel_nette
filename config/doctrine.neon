@@ -9,8 +9,9 @@ extensions:
     nettrine.orm.cache: Nettrine\ORM\DI\OrmCacheExtension
 	# Use it only if you are using annotations instead of php8 attributes
     # doctrine.orm.annotations: Nettrine\ORM\DI\OrmAnnotationsExtension
-    doctrine.orm.console: Nettrine\ORM\DI\OrmConsoleExtension
+    doctrine.orm.console: Nettrine\ORM\DI\OrmConsoleExtension(%consoleMode%)
     doctrine.cache: Nettrine\Cache\DI\CacheExtension
+    nettrine.migrations: Nettrine\Migrations\DI\MigrationsExtension
 
 doctrine.orm.attributes: # If you still use annotations, change to doctrine.orm.annotations
     mapping:
@@ -20,8 +21,12 @@ doctrine.dbal:
     debug:
         panel: %debugMode%
     connection:
-        driver: pdo_mysql
+        driver: %database_connection.driver%
         host: %database_connection.host%
         user: %database_connection.user%
         password: %database_connection.password%
         dbname: %database_connection.dbname%
+
+nettrine.migrations:
+	directories:
+		App\Migrations: %appDir%/migrations
