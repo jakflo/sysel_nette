@@ -24,7 +24,18 @@ class TestDbConnector
 
     public function __construct()
     {
-        $databaseNeon = Neon::decodeFile(__DIR__ . '/../../config/database_connection.neon');
+        if (getenv('ciTest')) {
+            $databaseNeon_1 = Neon::decodeFile(__DIR__ . '/../../config/database_connection.neon');
+            $databaseNeon_2 = Neon::decodeFile(__DIR__ . '/../../config/testCi.neon');
+            $databaseNeon = $databaseNeon_1;
+            $databaseNeon['parameters']['database_connection'] = array_merge(
+                $databaseNeon['parameters']['database_connection'], 
+                $databaseNeon_2['parameters']['database_connection']
+            );
+        } else {
+            $databaseNeon = Neon::decodeFile(__DIR__ . '/../../config/database_connection.neon');
+        }
+        
         $this->defaultDbConnParams = $databaseNeon['parameters']['database_connection'];
         $this->testDbName = $this->defaultDbConnParams['testDbname'];
     }

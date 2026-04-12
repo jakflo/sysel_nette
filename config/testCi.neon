@@ -1,0 +1,7 @@
+#database_connection for CI test run
+parameters:
+	database_connection:
+		host: 127.0.0.1
+		user: root
+		password: mysql
+		

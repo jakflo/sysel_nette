@@ -5,7 +5,13 @@ use \App\BootstrapType;
 
 function createContainer(): Nette\DI\Container
 {
-    $bootstrap = new \App\Bootstrap(BootstrapType::test);// musi byt BootstrapType::test, jinak tester smaze data z ostre DB
+    // musi byt BootstrapType::test|BootstrapType::ciTest, jinak tester smaze data z ostre DB
+    if (getenv('ciTest')) {
+        $bootstrap = new \App\Bootstrap(BootstrapType::ciTest);
+    } else {
+        $bootstrap = new \App\Bootstrap(BootstrapType::test);
+    }
+    
     $container = $bootstrap->bootWebApplication();
     return $container;
 }

@@ -1,0 +1,80 @@
+name: PHP Composer
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+permissions:
+  contents: read
+
+env:
+  ciTest: true #enforces loading testCi.neon in app with alt DB connection settings
+
+jobs:
+  build_and_test:
+
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          # The MySQL docker container requires these environment variables to be set
+          # so we can create and migrate the test database.
+          # See: https://hub.docker.com/_/mysql
+          MYSQL_DATABASE: sysel
+          MYSQL_ROOT_PASSWORD: mysql
+        ports:
+          # Opens port 3306 on service container and host
+          # https://docs.github.com/en/actions/using-containerized-services/about-service-containers
+          - 3306:3306
+          # Before continuing, verify the mysql container is reachable from the ubuntu host
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+    - uses: actions/checkout@v5
+
+    - name: Setup GitHub auth for Composer
+      run: composer config --global github-oauth.github.com ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Validate composer.json and composer.lock
+      run: composer validate --strict
+
+    - name: Cache Composer packages
+      id: composer-cache
+      uses: actions/cache@v5
+      with:
+        path: vendor
+        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-
+
+    - name: Install dependencies
+      run: composer update && composer install --prefer-dist --no-progress
+
+    - name: make dirs
+      run: |
+        mkdir -m 777 log
+        mkdir -m 777 temp
+        mkdir -m 777 tempForTests
+
+    
+
+    - name: test
+      run: |
+        php vendor/bin/tester -C -j=1 tests
+
+    # - name: Upload logs
+    #   if: failure()
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: logs
+    #     path: ./log/
+
+    # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
+    # Docs: https://getcomposer.org/doc/articles/scripts.md
+
+    # - name: Run test suite
+    #   run: composer run-script test

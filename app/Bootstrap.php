@@ -57,11 +57,14 @@ class Bootstrap
 		$configDir = $this->rootDir . '/config';
 		$this->configurator->addConfig($configDir . '/common.neon');
 		$this->configurator->addConfig($configDir . '/services.neon');
-                
-                if ($this->mode === BootstrapType::test) {
-                    $this->configurator->addConfig($configDir . '/test.neon');
-                } elseif ($this->mode === BootstrapType::console) {
-                    $this->configurator->addConfig($configDir . '/console.neon');
-                }
+
+		if ($this->mode === BootstrapType::ciTest) {
+			$this->configurator->addConfig($configDir . '/testCi.neon');
+		}
+		if ($this->mode === BootstrapType::test | $this->mode === BootstrapType::ciTest) {
+			$this->configurator->addConfig($configDir . '/test.neon');
+		} elseif ($this->mode === BootstrapType::console) {
+			$this->configurator->addConfig($configDir . '/console.neon');
+		}
 	}
 }
