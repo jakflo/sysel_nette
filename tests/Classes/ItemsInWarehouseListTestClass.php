@@ -18,7 +18,8 @@ class ItemsInWarehouseListTestClass extends SyselTestCase
             protected \App\UI\ItemsList\ItemsModelFactory $items_model_factory, 
             protected \App\UI\ItemsLotList\ItemsLotModelFactory $items_lot_model_factory, 
             protected \App\UI\ItemsInWarehouseFull\ItemsInWarehouseFullModelFactory $items_in_warehouse_full_model_factory, 
-            protected \Nette\Http\IRequest $http_request
+            protected \Nette\Http\IRequest $http_request,
+            protected TestDbConnector $testDbConnector,
     )
     {
         

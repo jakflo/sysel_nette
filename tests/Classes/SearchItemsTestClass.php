@@ -10,7 +10,8 @@ class SearchItemsTestClass extends SyselTestCase
         protected \tests\Classes\DataCreatorFactory $data_creator_factory, 
         protected \Doctrine\ORM\EntityManager $em, 
         protected \App\UI\FindItems\ItemsQueryFactory $items_query_factory, 
-        protected \App\UI\ItemsInWarehouse\ItemsInWarehouseModelFactory $items_in_warehouse_model_factory
+        protected \App\UI\ItemsInWarehouse\ItemsInWarehouseModelFactory $items_in_warehouse_model_factory,
+        protected TestDbConnector $testDbConnector,
     )
     {
         

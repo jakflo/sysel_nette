@@ -12,7 +12,8 @@ class WarehouseListTestClass extends SyselTestCase
     public function __construct(
             protected \App\UI\WarehouseList\WarehouseModelFactory $warehouse_model_factory, 
             protected \tests\Classes\DataCreatorFactory $data_creator_factory, 
-            protected \Doctrine\ORM\EntityManager $em
+            protected \Doctrine\ORM\EntityManager $em,
+            protected TestDbConnector $testDbConnector,
     )
     {
         

@@ -19,7 +19,8 @@ class OrdersScenario
     public function __construct(
         protected \tests\Classes\DataCreatorFactory $data_creator_factory,         
         protected \App\UI\Orders\OrdersModelFactory $orders_model_factory,          
-        protected \App\UI\ItemsInWarehouse\ItemsInWarehouseModelFactory $items_in_warehouse_model_factory
+        protected \App\UI\ItemsInWarehouse\ItemsInWarehouseModelFactory $items_in_warehouse_model_factory,
+        protected TestDbConnector $testDbConnector,
     )
     {
         $this->create();

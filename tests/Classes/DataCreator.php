@@ -12,7 +12,8 @@ class DataCreator
             protected \App\UI\ManufacturerList\ManufacturerModelFactory $manufacturer_model_factory, 
             protected \App\UI\Client\ClientModelFactory $client_model_factory, 
             protected \App\UI\ItemsInWarehouse\ItemsInWarehouseModelFactory $items_in_warehouse_model_factory, 
-            protected \Doctrine\ORM\EntityManager $em
+            protected \Doctrine\ORM\EntityManager $em,
+            protected TestDbConnector $testDbConnector,
     )
     {
         

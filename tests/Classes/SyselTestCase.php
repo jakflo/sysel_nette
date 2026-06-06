@@ -5,10 +5,12 @@ namespace tests\Classes;
 
 class SyselTestCase extends \Tester\TestCase
 {
-    public function __construct()
+    public function __construct(
+        protected \Doctrine\ORM\EntityManager $em,
+        protected TestDbConnector $testDbConnector
+    )
     {
-        $dbConnector = new \tests\TestDbConnector();
-        $dbConnector->setup();
+        $this->testDbConnector->setup();
     }
     
     protected function setUp()
@@ -25,8 +27,7 @@ class SyselTestCase extends \Tester\TestCase
     
     public function run(): void
     {
-        $dbConnector = new \tests\Classes\TestDbConnector();
-        $dbConnector->setup();
+        $this->testDbConnector->setup();
         parent::run();
     }
 }

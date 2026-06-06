@@ -1,3 +1,11 @@
+services:
+	- \tests\Classes\TestDbConnector(
+		%database_connection.driver%, 
+		%database_connection.host%, 
+		%database_connection.user%, 
+		%database_connection.password%, 
+		%database_connection.testDbname%)
+
 database:
 	dsn: 'mysql:host=%database_connection.host%;dbname=%database_connection.testDbname%'
 	user: %database_connection.user%

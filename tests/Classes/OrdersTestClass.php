@@ -13,7 +13,8 @@ class OrdersTestClass extends SyselTestCase
         protected \Doctrine\ORM\EntityManager $em, 
         protected \App\UI\Orders\OrdersModelFactory $orders_model_factory, 
         protected \App\UI\OrderDetail\OrderDetailModelFactory $order_detail_model_factory, 
-        protected \Nette\Http\IRequest $http_request
+        protected \Nette\Http\IRequest $http_request,
+        protected TestDbConnector $testDbConnector,
     )
     {
         

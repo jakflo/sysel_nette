@@ -1,7 +1,7 @@
 <?php
 namespace tests\Classes;
 
-use \Nette\Neon\Neon;
+//use \Nette\Neon\Neon;
 use \Doctrine\DBAL\DriverManager;
 use \Doctrine\DBAL\Connection;
 use \Doctrine\Migrations\DependencyFactory;
@@ -12,33 +12,20 @@ use \Doctrine\Migrations\MigratorConfiguration;
 /**
  * pro ucely testovaci vytvori testovaci DB (tu predchozi smaze)
  * nutne:
- *      -v config/database_connection.neon MUSI byt nastaveno jmeno testovaci DB, jako ['database_connection']['testDbname'], jinak dojde v vymazu dat z ostre DB
- *      - createContainer() v bootstrap.php musi vracet DI, kde je nacten i config/test.neon, jinak dojde v vymazu dat z ostre DB
+ *      - testovaci DB je po kazdem testu smazana, jeji jmeno se nesmi shodovat s produkcni DB 
  *      - musi existovat Doctrine migrace (migrations:dump-schema), vc. prikazu, co vlozi radky do tabulek item_status a order_status
  */
 
 class TestDbConnector
 {
-    private array $defaultDbConnParams;
-    private string $testDbName;
-
-    public function __construct()
-    {
-        if (getenv('ciTest')) {
-            $databaseNeon_1 = Neon::decodeFile(__DIR__ . '/../../config/database_connection.neon');
-            $databaseNeon_2 = Neon::decodeFile(__DIR__ . '/../../config/testCi.neon');
-            $databaseNeon = $databaseNeon_1;
-            $databaseNeon['parameters']['database_connection'] = array_merge(
-                $databaseNeon['parameters']['database_connection'], 
-                $databaseNeon_2['parameters']['database_connection']
-            );
-        } else {
-            $databaseNeon = Neon::decodeFile(__DIR__ . '/../../config/database_connection.neon');
-        }
-        
-        $this->defaultDbConnParams = $databaseNeon['parameters']['database_connection'];
-        $this->testDbName = $this->defaultDbConnParams['testDbname'];
-    }
+    public function __construct(
+        protected string $driver, 
+        protected string $host, 
+        protected string $user, 
+        protected string $password, 
+        protected string $testDbName
+    )
+    {}
     
     public function setup()
     {
@@ -56,13 +43,13 @@ class TestDbConnector
         $dependencyFactory->getMigrator()->migrate($upPlan, $config);
     }
     
-    private function getDbConnectionWoDbName(): Connection
+    protected function getDbConnectionWoDbName(): Connection
     {
         return DriverManager::getConnection([
-            'driver' => $this->defaultDbConnParams['driver'],
-            'host' => $this->defaultDbConnParams['host'],
-            'user' => $this->defaultDbConnParams['user'],
-            'password' => $this->defaultDbConnParams['password'],
+            'driver' => $this->driver,
+            'host' => $this->host,
+            'user' => $this->user,
+            'password' => $this->password,
         ]);        
     }
 }

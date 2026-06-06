@@ -15,7 +15,8 @@ class ItemsLotTestClass extends SyselTestCase
         protected \Nette\Http\IRequest $http_request, 
         protected \App\UI\ItemsInWarehouse\ItemsInWarehouseModelFactory $items_in_warehouse_model_factory, 
         protected \App\UI\ItemsLotList\ItemsLotModelFactory $items_lot_model_factory, 
-        protected \App\UI\ItemsList\ItemsModelFactory $items_model_factory
+        protected \App\UI\ItemsList\ItemsModelFactory $items_model_factory,
+        protected TestDbConnector $testDbConnector,
     )
     {
         

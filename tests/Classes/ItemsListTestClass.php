@@ -11,7 +11,8 @@ class ItemsListTestClass extends SyselTestCase
     public function __construct(
             protected \tests\Classes\DataCreatorFactory $data_creator_factory, 
             protected \Doctrine\ORM\EntityManager $em, 
-            protected \App\UI\ItemsList\ItemsModelFactory $items_model_factory
+            protected \App\UI\ItemsList\ItemsModelFactory $items_model_factory,
+            protected TestDbConnector $testDbConnector,
     )
     {
         
