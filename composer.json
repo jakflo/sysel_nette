@@ -21,7 +21,8 @@
 		"tracy/tracy": "^2.10",
 		"nettrine/orm": "^0.8.4",
 		"contributte/console": "^0.10.1",
-		"nettrine/migrations": "^0.10.1"
+		"nettrine/migrations": "^0.10.1",
+		"symfony/dotenv": "^7.4"
 	},
 	"require-dev": {
 		"nette/tester": "^2.5",
@@ -30,7 +31,7 @@
 	"autoload": {
 		"psr-4": {
 			"App\\": "app",
-                        "tests\\": "tests"
+			"tests\\": "tests"
 		}
 	},
 	"minimum-stability": "stable",

@@ -10,7 +10,8 @@ permissions:
   contents: read
 
 env:
-  ciTest: true #enforces loading testCi.neon in app with alt DB connection settings
+  ciTest: true
+  DB_HOST: 127.0.0.1
 
 jobs:
   build_and_test:

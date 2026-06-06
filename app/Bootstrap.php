@@ -6,6 +6,7 @@ namespace App;
 
 use Nette;
 use Nette\Bootstrap\Configurator;
+use Symfony\Component\Dotenv\Dotenv;
 
 
 class Bootstrap
@@ -21,10 +22,10 @@ class Bootstrap
 		$this->setTempDir();
 	}
 
-        /**
-         * @param BootstrapType $mode - urci, jake neony maji byt nacteny
-         * @return Nette\DI\Container
-         */
+	/**
+	 * @param BootstrapType $mode - urci, jake neony maji byt nacteny
+	 * @return Nette\DI\Container
+	 */
 	public function bootWebApplication(): Nette\DI\Container
 	{
 		$this->initializeEnvironment();
@@ -36,7 +37,16 @@ class Bootstrap
 	public function initializeEnvironment(): void
 	{
 		//$this->configurator->setDebugMode('secret@23.75.345.200'); // enable for your remote IP
+		$dotenv = new Dotenv();
+		$dotenv->load(__DIR__.'/../config/.env');
 		$this->configurator->enableTracy($this->rootDir . '/log');
+		$this->configurator->addDynamicParameters([
+			'env' => array_merge(
+				(array) getenv(),
+				$_ENV,
+				$_SERVER,
+			),
+		]);
 
 		$this->configurator->createRobotLoader()
 			->addDirectory(__DIR__)
@@ -57,10 +67,7 @@ class Bootstrap
 		$configDir = $this->rootDir . '/config';
 		$this->configurator->addConfig($configDir . '/common.neon');
 		$this->configurator->addConfig($configDir . '/services.neon');
-
-		if ($this->mode === BootstrapType::ciTest) {
-			$this->configurator->addConfig($configDir . '/testCi.neon');
-		}
+		
 		if ($this->mode === BootstrapType::test | $this->mode === BootstrapType::ciTest) {
 			$this->configurator->addConfig($configDir . '/test.neon');
 		} elseif ($this->mode === BootstrapType::console) {

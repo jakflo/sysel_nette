@@ -1,8 +1,8 @@
 parameters:
 	database_connection:
-		host: localhost
-		user: root
-		password: mysql
+		host: %env.DB_HOST%
+		user: %env.DB_USER%
+		password: %env.DB_PASSWORD%
 		dbname: sysel
 		testDbname: sysel_test #jmeno DB pro unit testy. MUSI se lisit od dbname, bo testy na zacatku smazou data
 		driver: pdo_mysql
