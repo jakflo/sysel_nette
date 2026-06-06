@@ -3,17 +3,15 @@ Syslovo sklad
 
 Požadavky
 ------------
-
-- Nette 3.2
 - PHP 8.1.
-- Nettrine 0.8.4
-
 
 Instalace
 ------------
 
-- Je doporučeno naistalovat Nette a Netrine pomocí Composer.
-- Poté pomocí db_dump.sql vytvořte DB a v /config/database_connection.neon nakonfigurujte
+- composer install
+- vytvořte prázdné adresáře log, temp a tempForTests
+- nakonfigurujte DB a v /config/.env a v /config/database_connection.neon, nebo předejte parametry pomocí ENV
+- zmigrujte pomocí php bin/console.php migrations:current nebo požijte db_dump.sql obsahující testovací data
 
 Spuštení webu
 ----------------
