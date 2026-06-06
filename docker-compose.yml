@@ -1,0 +1,29 @@
+name: sysel
+services:
+  db:
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=mysql
+    volumes:
+      - sysDb:/var/lib/mysql
+  web:
+    image: syselphp:1.1
+    ports: ["80:80"]
+    environment:
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASSWORD=mysql
+    # volumes:
+    #   - .:/var/www
+    #   - sysVe:/var/www/vendor
+    depends_on: [db]  
+  adminer:
+    image: adminer
+    ports:
+      - 8080:8080
+    depends_on: [db]
+volumes:
+  sysDb:
+    external: false
+  # sysVe:
+  #   external: false
